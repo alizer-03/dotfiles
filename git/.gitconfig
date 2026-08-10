@@ -6,13 +6,12 @@
 [color]
 	ui = auto
 [core]
-	excludesfile = /Users/ali/.gitignore
+	excludesfile = ~/.gitignore
     pager = delta
 [delta]
     navigate = true
     dark = true
     side-by-side = true
-
 [interactive]
     diffFilter = delta --color-only
 [filter "lfs"]

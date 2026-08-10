@@ -1,0 +1,23 @@
+# Gitignore global (~/.gitignore) — s'applique à tous les dépôts, en plus du
+# .gitignore propre à chaque projet.
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+venv/
+.venv/
+
+# C
+*.o
+*.out
+*.dSYM/
+
+# VSCode
+.vscode/
