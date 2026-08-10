@@ -1,0 +1,25 @@
+# Police
+font-family = JetBrainsMono Nerd Font
+font-size = 13
+
+# Thème
+theme = Catppuccin Mocha
+
+# Fenêtre
+background-opacity = 0.95
+background-blur-radius = 20
+window-decoration = false
+macos-option-as-alt = right
+mouse-hide-while-typing = true
+window-padding-x = 12
+window-padding-y = 8
+
+# Curseur
+cursor-style = bar
+cursor-style-blink = true
+
+# Comportement
+confirm-close-surface = true
+copy-on-select = true
+shell-integration = detect
+keybind = ctrl+t=unbind

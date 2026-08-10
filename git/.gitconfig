@@ -1,0 +1,22 @@
+[user]
+	name = alizer-03
+	email = 297183473+alizer-03@users.noreply.github.com
+[init]
+	defaultBranch = main
+[color]
+	ui = auto
+[core]
+	excludesfile = /Users/ali/.gitignore
+    pager = delta
+[delta]
+    navigate = true
+    dark = true
+    side-by-side = true
+
+[interactive]
+    diffFilter = delta --color-only
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true

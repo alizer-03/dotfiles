@@ -1,0 +1,7 @@
+-- Modèle vide — copie ce fichier en "identity.lua" (sans ".example") et
+-- remplace les valeurs par les tiennes. "identity.lua" n'est jamais suivi
+-- par git (voir .gitignore à la racine du repo).
+return {
+	user42 = "ton_login_42",
+	mail42 = "ton_email@learner.42.fr",
+}
