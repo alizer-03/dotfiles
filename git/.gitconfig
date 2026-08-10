@@ -14,8 +14,13 @@
     side-by-side = true
 [interactive]
     diffFilter = delta --color-only
-[filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
+[alias]
+	st = status
+	co = checkout
+	a = add
+	ap = add -p
+	cm = commit -m
+	p = push origin HEAD
+	pu = pull origin
+	d = diff
+	graph = log --graph --pretty='%C(yellow)%h %C(cyan)%ar %C(green)%an %C(white)%s' --abbrev-commit
