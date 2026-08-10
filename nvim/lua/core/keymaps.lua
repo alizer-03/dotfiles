@@ -15,5 +15,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		map("n", "<leader>lf", "<cmd>Lspsaga finder<cr>", "Références et définitions")
 		map("n", "<leader>lc", "<cmd>Lspsaga code_action<cr>", "Actions de code")
 		map("n", "<leader>lr", "<cmd>Lspsaga rename<cr>", "Renommer")
+
+		-- Call hierarchy : qui appelle cette fonction, et qu'est-ce qu'elle appelle
+		map("n", "<leader>li", "<cmd>Lspsaga incoming_calls<cr>", "Appels entrants")
+		map("n", "<leader>lO", "<cmd>Lspsaga outgoing_calls<cr>", "Appels sortants")
 	end,
 })

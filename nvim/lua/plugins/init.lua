@@ -303,7 +303,7 @@ return {
 		priority = 1000, -- chargé avant tous les autres plugins non-lazy
 		opts = {
 			flavour = "mocha", -- variante sombre et douce de la palette Catppuccin
-			transparent_background = false,
+			transparent_background = true, -- laisse l'opacité du terminal (Ghostty) transparaître au lieu d'un fond opaque
 			show_end_of_buffer = false,
 			term_colors = true,
 			styles = {
@@ -340,6 +340,9 @@ return {
 			bigfile = { enabled = true, auto_disable_lsp = true, auto_disable_treesitter = true },
 			explorer = { enabled = true },
 			picker = { enabled = true },
+			gh = {}, -- intégration GitHub (utilise le CLI "gh" en interne)
+			terminal = { enabled = true }, -- terminal flottant, pour lancer make/tests sans quitter Neovim
+			words = { enabled = true }, -- surlignage + navigation entre usages du mot sous le curseur
 			dashboard = {
 				enabled = true,
 				sections = {
@@ -374,6 +377,10 @@ return {
 			{ "<leader>gg", function() Snacks.lazygit() end, desc = "LazyGit" },
 			{ "<leader>gl", function() Snacks.picker.git_log() end, desc = "Historique des commits" },
 			{ "<leader>gd", function() Snacks.picker.git_diff() end, desc = "Diff Git" },
+			{ "<leader>gp", function() Snacks.picker.gh_pr() end, desc = "Pull requests GitHub" },
+
+			-- Terminal
+			{ "<leader>tt", function() Snacks.terminal() end, desc = "Terminal flottant (bascule)" },
 
 			-- Introspection Neovim (sous-ensemble volontairement réduit à l'essentiel)
 			{ "<leader>sd", function() Snacks.picker.diagnostics() end, desc = "Diagnostics du projet" },
@@ -443,11 +450,10 @@ return {
 	},
 
 	-- Formatage de code à la demande — volontairement PAS automatique à la
-	-- sauvegarde, pour rester cohérent avec la prudence gardée côté C (où le
-	-- formateur norme 42 n'a jamais été ajouté faute d'être vérifié).
-	-- Ici les formateurs (ruff format, prettier) sont des standards matures
-	-- et déterministes, donc le risque est différent — mais le déclenchement
-	-- reste manuel par choix, pas par nécessité technique.
+	-- sauvegarde. Pour le C dans un dossier "42", aucun formateur n'est câblé
+	-- ici : la norme de ce cursus est vérifiée par `core/norminette.lua`, pas
+	-- reformatée automatiquement. Ailleurs (C hors 42, Python, Web), ce sont
+	-- des standards matures et déterministes (clang-format, ruff, prettier).
 	{
 		"stevearc/conform.nvim",
 		cmd = "ConformInfo",
@@ -455,13 +461,42 @@ return {
 			{
 				"<leader>cf",
 				function()
-					require("conform").format({ lsp_fallback = true })
+					-- pas de lsp_fallback : si aucun formateur ne s'applique
+					-- (ex. bug écarté volontairement), rien ne doit se passer
+					-- plutôt que de se rabattre sur clangd et casser le scoping
+					require("conform").format({ lsp_fallback = false })
 				end,
 				desc = "Formater le buffer",
 			},
 		},
 		opts = {
+			formatters = {
+				clang_format = {
+					-- ne s'applique jamais dans un dossier "42" : la norme de ce
+					-- cursus a son propre formateur dédié (voir c_formatter_42 ci-dessous)
+					-- Style Microsoft : accolades sur leur propre ligne, cohérent
+					-- visuellement avec la norme 42 elle-même (moins de rupture
+					-- de style en passant d'un contexte à l'autre)
+					prepend_args = { "-style=Microsoft" },
+					condition = function(_, ctx)
+						return not ctx.filename:match("/42/")
+					end,
+				},
+				c_formatter_42 = {
+					-- formateur dédié à la norme 42 (https://github.com/cacharle/c_formatter_42)
+					-- installé séparément : pipx install c-formatter-42
+					command = "c_formatter_42",
+					stdin = true,
+					condition = function(_, ctx)
+						return ctx.filename:match("/42/") ~= nil
+					end,
+				},
+			},
 			formatters_by_ft = {
+				-- les deux formateurs C sont mutuellement exclusifs via leur
+				-- "condition" ci-dessus : un seul s'exécute réellement selon
+				-- que le fichier est dans un dossier "42" ou non
+				c = { "c_formatter_42", "clang_format" },
 				python = { "ruff_format" },
 				javascript = { "prettier" },
 				typescript = { "prettier" },
@@ -470,14 +505,21 @@ return {
 			},
 		},
 		config = function(_, opts)
-			-- prettier n'est pas un serveur LSP : mason-lspconfig ne l'installe
-			-- pas automatiquement (voir plus haut, ensure_installed ne couvre
-			-- que les serveurs LSP) — on s'en charge nous-mêmes ici, une seule fois
+			-- prettier et clang-format ne sont pas des serveurs LSP :
+			-- mason-lspconfig ne les installe pas automatiquement (voir plus
+			-- haut, ensure_installed ne couvre que les serveurs LSP) — on s'en
+			-- charge nous-mêmes ici, une seule fois. c_formatter_42 n'est pas
+			-- disponible via Mason (paquet PyPI trop spécifique) : à installer
+			-- manuellement avec `pipx install c-formatter-42`.
 			local ok, registry = pcall(require, "mason-registry")
-			if ok and registry.has_package("prettier") then
-				local pkg = registry.get_package("prettier")
-				if not pkg:is_installed() then
-					pkg:install()
+			if ok then
+				for _, pkg_name in ipairs({ "prettier", "clang-format" }) do
+					if registry.has_package(pkg_name) then
+						local pkg = registry.get_package(pkg_name)
+						if not pkg:is_installed() then
+							pkg:install()
+						end
+					end
 				end
 			end
 			require("conform").setup(opts)
@@ -501,7 +543,44 @@ return {
 				{ "<leader>l", group = "LSP" },
 				{ "<leader>h", group = "Hunks Git" },
 				{ "<leader>c", group = "Code" },
+				{ "<leader>t", group = "Terminal" },
 			},
 		},
 	},
+
+	-- Entraînement LeetCode directement dans Neovim : parcourir les énoncés,
+	-- coder la solution dans un buffer normal, lancer les tests et soumettre,
+	-- sans quitter l'éditeur. Chargé à la demande (:Leet ...) plutôt qu'au
+	-- démarrage, pour ne pas alourdir l'ouverture de Neovim au quotidien.
+	{
+		"kawre/leetcode.nvim",
+		cmd = "Leet",
+		-- pas de "build" ici : le parseur Treesitter HTML est déjà installé
+		-- (scope Web) ; la syntaxe ":TSUpdate html" ne fonctionne de toute
+		-- façon plus avec la branche "main" de nvim-treesitter
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"MunifTanjim/nui.nvim",
+		},
+		opts = {
+			lang = "c", -- langage par défaut des exercices, modifiable à tout moment ici
+			picker = { provider = "snacks-picker" }, -- réutilise snacks.nvim, pas besoin de telescope
+		},
+	},
+
+	-- Affiche l'activité en cours (fichier/langage) sur le profil Discord.
+	-- Activable/désactivable à la volée avec la commande :CordTogglePresence,
+	-- sans avoir à retoucher cette configuration.
+	{
+		"vyfor/cord.nvim",
+		event = "VeryLazy",
+		opts = {
+			usercmds = true, -- active les commandes :Cord... (dont :CordTogglePresence)
+		},
+	},
+
+	-- Débogueur : retiré après une longue session de diagnostic infructueuse
+	-- (blocage silencieux au lancement, cause jamais identifiée avec
+	-- certitude malgré vérification de l'adaptateur, des permissions macOS
+	-- et des logs) — à reconsidérer plus tard si besoin, pas maintenant.
 }

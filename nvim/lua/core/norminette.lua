@@ -46,6 +46,9 @@ local function run(bufnr)
 	if not name:match("%.[ch]$") then
 		return -- ne s'exécute que sur les fichiers .c/.h
 	end
+	if not name:match("/42/") then
+		return -- ne s'applique qu'aux projets situés dans un dossier "42" (norme propre à ce cursus) ; ailleurs, un formateur classique (clang-format) prend le relais
+	end
 	if vim.fn.executable("norminette") == 0 then
 		return -- outil non installé : on abandonne silencieusement plutôt que d'afficher une erreur à chaque frappe
 	end
@@ -102,6 +105,8 @@ end
 function M.setup()
 	local grp = vim.api.nvim_create_augroup("NorminetteAsync", { clear = true })
 	-- déclenche une vérification à l'ouverture et à chaque sauvegarde d'un fichier C/H
+	-- (le filtre de dossier "42/" est appliqué dans run(), pas ici, pour rester
+	-- le seul endroit qui décide si le fichier est concerné)
 	vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost" }, {
 		group = grp,
 		pattern = { "*.c", "*.h" },
