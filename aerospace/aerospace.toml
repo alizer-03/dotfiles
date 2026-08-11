@@ -52,17 +52,11 @@ alt-shift-1 = 'move-node-to-workspace 1'
 alt-shift-2 = 'move-node-to-workspace 2'
 alt-shift-3 = 'move-node-to-workspace 3'
 
-# Règles de détection de fenêtres
+# Règles de détection de fenêtres — évaluées dans l'ordre, la première qui
+# correspond gagne. Les 4 apps ci-dessous gardent leur comportement défini
+# précédemment ; tout le reste tombe dans la règle finale, qui les rend
+# flottantes par défaut pour que Rectangle en reprenne le contrôle.
 
-# Finder ne tuile pas correctement (limitation de son intégration avec
-# l'API d'accessibilité macOS) — laissé flottant plutôt que tuilé
-[[on-window-detected]]
-if.app-id = 'com.apple.finder'
-run = 'layout floating'
-
-# Chaque nouvelle fenêtre de ces apps rejoint automatiquement son workspace
-# dédié — Ghostty et VS Code partagent le 1 (usage voulu : split entre les
-# deux, ou deux fenêtres Ghostty), Discord reste seul
 [[on-window-detected]]
 if.app-id = 'com.mitchellh.ghostty'
 run = 'move-node-to-workspace 1'
@@ -75,8 +69,12 @@ run = 'move-node-to-workspace 1'
 if.app-id = 'com.hnc.Discord'
 run = 'move-node-to-workspace 3'
 
-# Brave : flottant en permanence (classique ou privée), pour qu'une nouvelle
-# fenêtre s'ouvre par-dessus plutôt que de partager l'écran avec la première
 [[on-window-detected]]
 if.app-id = 'com.brave.Browser'
 run = ['layout floating', 'move-node-to-workspace 2']
+
+# Règle finale : if = 'true' matche toujours, syntaxe officielle
+# recommandée par AeroSpace pour une règle sans condition.
+[[on-window-detected]]
+if = 'true'
+run = 'layout floating'
