@@ -1,53 +1,78 @@
-# Neovim + dépendances de compilation/LSP
-brew "neovim"
-brew "git"
-brew "ripgrep"
-brew "fd"
-brew "tree-sitter"
-brew "tree-sitter-cli"
-brew "node"          # requis par plusieurs serveurs LSP Mason (ts_ls, html, cssls, eslint, pyright)
-brew "python@3.14"   # pour exécuter tes scripts Python (pyright/ruff analysent, n'exécutent pas)
-brew "pipx"          # requis pour norminette
-
-# Terminal / shell
-cask "ghostty"
-cask "font-jetbrains-mono-nerd-font"
-brew "starship"
-brew "zoxide"
-brew "fzf"
+tap "nikitabobko/tap"
+# Improved shell history for zsh, bash, fish and nushell
 brew "atuin"
-brew "eza"
+# Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
-brew "zsh-autosuggestions"
-brew "zsh-syntax-highlighting"
-brew "tealdeer"    # fournit la commande `tldr`
-
-# Git
-brew "git-delta"
+# Modern, maintained replacement for ls
+brew "eza"
+# Simple, fast and user-friendly alternative to find
+brew "fd"
+# Command-line fuzzy finder written in Go
+brew "fzf"
+# GitHub command-line tool
 brew "gh"
-brew "lazygit"
-
-# Autres outils utilisés dans .zshrc
-brew "yazi"
+# Distributed revision control system
+brew "git"
+# Syntax-highlighting pager for git and diff output
+brew "git-delta"
+# Render markdown on the CLI
 brew "glow"
+# Simple terminal UI for git commands
+brew "lazygit"
+# Deep clean and optimize your Mac
 brew "mole"
-
-# Applications
+# Incremental parsing library
+brew "tree-sitter"
+# Ambitious Vim-fork focused on extensibility and agility
+brew "neovim"
+# Open-source, cross-platform JavaScript runtime environment
+brew "node"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.14"
+# Execute binaries from Python packages in isolated environments
+brew "pipx"
+# Search tool like grep and The Silver Searcher
+brew "ripgrep"
+# Cross-shell prompt for astronauts
+brew "starship"
+# Very fast implementation of tldr in Rust
+brew "tealdeer"
+# Parser generator tool
+brew "tree-sitter-cli"
+# Blazing fast terminal file manager written in Rust, based on async I/O
+brew "yazi"
+# Shell extension to navigate your filesystem faster
+brew "zoxide"
+# Fish-like fast/unobtrusive autosuggestions for zsh
+brew "zsh-autosuggestions"
+# Fish shell like syntax highlighting for zsh
+brew "zsh-syntax-highlighting"
+# AeroSpace is an i3-like tiling window manager for macOS
+cask "nikitabobko/tap/aerospace", trusted: true
+# Enable Windows-like alt-tab
 cask "alt-tab"
+# Web browser focusing on privacy
 cask "brave-browser"
+# Anthropic's official Claude AI desktop app
 cask "claude"
+# Voice and text chat software
 cask "discord"
+cask "font-hack-nerd-font"
+cask "font-jetbrains-mono-nerd-font"
+# Terminal emulator that uses platform-native UI and GPU acceleration
+cask "ghostty"
+# Open-source cross-platform alternative to AirDrop
 cask "localsend"
+# Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
+# Control your tools with a few keystrokes
 cask "raycast"
+# Move and resize windows using keyboard shortcuts or snap areas
 cask "rectangle"
+# Messaging app with a focus on speed and security
 cask "telegram"
+# Open-source code editor
 cask "visual-studio-code"
-
-# Paquet npm global (indépendant du serveur LSP eslint géré par Mason dans Neovim)
-npm "eslint"
-
-# Extensions VS Code (revues et gardées lors du nettoyage terminal)
 vscode "aaron-bond.better-comments"
 vscode "adpyke.codesnap"
 vscode "alefragnani.project-manager"
@@ -72,3 +97,4 @@ vscode "pkief.material-product-icons"
 vscode "qwtel.sqlite-viewer"
 vscode "tomoki1207.pdf"
 vscode "usernamehw.errorlens"
+npm "eslint"
