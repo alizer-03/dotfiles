@@ -4,8 +4,8 @@
 # Version du schéma de config, requise par AeroSpace
 config-version = 2
 
-# Lancement automatique à la connexion — désactivé pour l'instant, le temps des tests
-start-at-login = false
+# Lancement automatique à la connexion
+start-at-login = true
 
 # Layout par défaut des nouveaux conteneurs de fenêtres
 # 'tiles' = fenêtres placées côte à côte, sans chevauchement
