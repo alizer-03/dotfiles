@@ -131,6 +131,15 @@ return {
 		end,
 	},
 
+	-- Affiche la progression des serveurs LSP (indexation, analyse) dans un
+	-- coin de l'écran — jusqu'ici aucun retour visuel pendant ce temps de
+	-- charge, aucun moyen de savoir si clangd/pyright ont fini d'indexer.
+	{
+		"j-hui/fidget.nvim",
+		event = "LspAttach",
+		opts = {},
+	},
+
 	-- Analyse syntaxique (coloration précise, indentation, pliage de code)
 	{
 		"nvim-treesitter/nvim-treesitter",
@@ -568,7 +577,7 @@ return {
 		end,
 	},
 
-		-- Linting pour les fichiers hors couverture LSP — actuellement seulement
+	-- Linting pour les fichiers hors couverture LSP — actuellement seulement
 	-- les scripts shell (.sh), aucun linter n'était en place dessus. Pas
 	-- activé sur zsh/.zshrc : shellcheck ne supporte pas officiellement ce
 	-- dialecte (faux positifs connus sur la syntaxe propre à zsh).

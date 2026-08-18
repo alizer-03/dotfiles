@@ -5,6 +5,7 @@
   "clangd_extensions.nvim": { "branch": "main", "commit": "78c2ecd659d54972be17aa6ba2deac3c53223b80" },
   "conform.nvim": { "branch": "master", "commit": "016802de402556da54c36bd7359b441266b01cdd" },
   "cord.nvim": { "branch": "master", "commit": "85f295e43550bc968b66d95d8bfd6e12bb17df08" },
+  "fidget.nvim": { "branch": "main", "commit": "6f793b2bcd2d35e201c09520f698bb763220908a" },
   "gitsigns.nvim": { "branch": "main", "commit": "5be654f2232c10ddcad19c1607a67b6b4b78fc29" },
   "hlargs.nvim": { "branch": "main", "commit": "05f3d1789642d5e1807121c05c42a5e883ba46d3" },
   "lazy.nvim": { "branch": "main", "commit": "306a05526ada86a7b30af95c5cc81ffba93fef97" },
