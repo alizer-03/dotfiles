@@ -24,6 +24,7 @@ alias c='clear'
 alias cat='bat'
 alias lg='lazygit'
 alias y='yazi'
+alias v='nvim'
 alias ..="cd .."
 alias ...="cd ../.."
 # Aliases — C
