@@ -1,18 +1,18 @@
 gui:
   theme:
     activeBorderColor:
-      - "#cba6f7"
+      - "#fca7ea"
       - bold
     inactiveBorderColor:
-      - "#a6adc8"
+      - "#828bb8"
     selectedLineBgColor:
-      - "#313244"
+      - "#2f334d"
     cherryPickedCommitBgColor:
-      - "#45475a"
+      - "#444a73"
     cherryPickedCommitFgColor:
-      - "#cba6f7"
+      - "#fca7ea"
     unstagedChangesColor:
-      - "#f38ba8"
+      - "#ff757f"
 
 git:
   paging:
