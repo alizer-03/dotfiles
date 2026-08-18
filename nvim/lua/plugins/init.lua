@@ -596,6 +596,18 @@ return {
 		end,
 	},
 
+	-- Repère et liste les commentaires TODO/FIXME/HACK/NOTE dans le projet —
+	-- rien d'équivalent actuellement pour ce genre de suivi.
+	{
+		"folke/todo-comments.nvim",
+		event = { "BufReadPost", "BufNewFile" },
+		dependencies = { "nvim-lua/plenary.nvim" },
+		opts = {},
+		keys = {
+			{ "<leader>st", "<cmd>TodoQuickFix<cr>", desc = "Commentaires TODO/FIXME du projet" },
+		},
+	},
+
 	-- Affiche un panneau flottant listant les touches disponibles dès qu'on
 	-- commence une séquence de raccourcis (ex. taper la touche leader puis
 	-- attendre) — sert d'aide-mémoire visuel pour tous les raccourcis définis
