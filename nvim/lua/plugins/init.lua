@@ -568,6 +568,25 @@ return {
 		end,
 	},
 
+		-- Linting pour les fichiers hors couverture LSP — actuellement seulement
+	-- les scripts shell (.sh), aucun linter n'était en place dessus. Pas
+	-- activé sur zsh/.zshrc : shellcheck ne supporte pas officiellement ce
+	-- dialecte (faux positifs connus sur la syntaxe propre à zsh).
+	{
+		"mfussenegger/nvim-lint",
+		event = { "BufReadPost", "BufWritePost" },
+		config = function()
+			require("lint").linters_by_ft = {
+				sh = { "shellcheck" },
+			}
+			vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost", "InsertLeave" }, {
+				callback = function()
+					require("lint").try_lint()
+				end,
+			})
+		end,
+	},
+
 	-- Affiche un panneau flottant listant les touches disponibles dès qu'on
 	-- commence une séquence de raccourcis (ex. taper la touche leader puis
 	-- attendre) — sert d'aide-mémoire visuel pour tous les raccourcis définis
