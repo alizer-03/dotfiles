@@ -1,7 +1,7 @@
 local M = {}
 
 M.get_server_list = function()
-	return { "clangd", "pyright", "ruff", "html", "cssls", "ts_ls", "eslint" }
+	return { "clangd", "pyright", "ruff", "html", "cssls", "ts_ls", "eslint", "lua_ls" }
 end
 
 M.setup_server_configs = function()
@@ -58,6 +58,12 @@ M.setup_server_configs = function()
 	-- fichier de config ESLint (.eslintrc.json, eslint.config.js, etc.) ;
 	-- sans ça, il reste silencieux, ce n'est pas un signe de mauvais réglage
 	vim.lsp.config("eslint", {})
+
+	-- Lua (édition de cette config Neovim elle-même) --------------------------
+	-- Sans ça, éditer tes propres fichiers .lua ne donne aucun diagnostic ni
+	-- complétion sur l'API vim.* — les réglages fins (globale "vim", chemin
+	-- du runtime) viennent du fichier .luarc.json à la racine de nvim/
+	vim.lsp.config("lua_ls", {})
 end
 
 return M
