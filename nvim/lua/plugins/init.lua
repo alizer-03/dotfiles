@@ -172,11 +172,9 @@ return {
 					end
 				end,
 			})
-
-			-- pliage de code basé sur la structure syntaxique plutôt que l'indentation
-			vim.opt.foldmethod = "expr"
-			vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-			vim.opt.foldlevel = 99 -- tout est déplié à l'ouverture d'un fichier
+			-- Le pliage de code (fold) est désormais entièrement géré par
+			-- nvim-ufo ci-dessous (foldmethod/foldexpr/foldlevel) — les deux
+			-- systèmes ne peuvent pas coexister, un seul reste actif.
 		end,
 	},
 
@@ -191,6 +189,41 @@ return {
 		branch = "main",
 		dependencies = { "nvim-treesitter/nvim-treesitter" },
 		event = "VeryLazy",
+	},
+
+	-- Pliage de code : aperçu du contenu plié sans avoir à l'ouvrir (zK), et
+	-- rendu plus soigné que le foldtext natif basique. Remplace entièrement
+	-- la gestion foldmethod/foldexpr posée dans le bloc nvim-treesitter
+	-- ci-dessus (un seul système de pliage actif, pas les deux).
+	{
+		"kevinhwang91/nvim-ufo",
+		dependencies = { "kevinhwang91/promise-async" },
+		event = { "BufReadPost", "BufNewFile" },
+		keys = {
+			{ "zR", function() require("ufo").openAllFolds() end, desc = "Ouvrir tous les plis" },
+			{ "zM", function() require("ufo").closeAllFolds() end, desc = "Fermer tous les plis" },
+			{
+				"zK",
+				function()
+					local winid = require("ufo").peekFoldedLinesUnderCursor()
+					if not winid then
+						vim.lsp.buf.hover()
+					end
+				end,
+				desc = "Aperçu du pli (ou hover LSP si pas de pli)",
+			},
+		},
+		config = function()
+			vim.o.foldcolumn = "1"
+			vim.o.foldlevel = 99 -- valeur haute requise par ufo, feel free to decrease if needed
+			vim.o.foldlevelstart = 99 -- tout est déplié à l'ouverture d'un fichier
+			vim.o.foldenable = true
+			require("ufo").setup({
+				provider_selector = function(bufnr, filetype, buftype)
+					return { "treesitter", "indent" }
+				end,
+			})
+		end,
 	},
 
 	-- Colore les paires de délimiteurs ( ) [ ] { } selon leur profondeur d'imbrication
