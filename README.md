@@ -48,6 +48,11 @@ ln -sf ~/dotfiles/lazygit/config.yml ~/.config/lazygit/config.yml
 ln -sf ~/dotfiles/yazi ~/.config/yazi
 ln -sf ~/dotfiles/prettier/.prettierrc ~/.prettierrc
 ln -sf ~/dotfiles/.editorconfig ~/Documents/Code/.editorconfig
+
+# bat : le thème n'est pas embarqué nativement, il faut l'installer une fois
+mkdir -p ~/.config/bat/themes
+curl -o ~/.config/bat/themes/tokyonight_moon.tmTheme https://raw.githubusercontent.com/folke/tokyonight.nvim/main/extras/sublime/tokyonight_moon.tmTheme
+bat cache --build
 ```
 
 > Si `~/.config/nvim` (ou un autre fichier/dossier cible) existe déjà sur la machine, renomme-le ou supprime-le avant de créer le lien symbolique — sinon la commande `ln` échoue silencieusement.
