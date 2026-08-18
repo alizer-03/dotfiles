@@ -641,6 +641,20 @@ return {
 		},
 	},
 
+	-- Améliore la quickfix native (utilisée par todo-comments <leader>st, les
+	-- diagnostics, les recherches) : coloration syntaxique des résultats,
+	-- lignes de contexte autour de chaque résultat, et surtout un buffer
+	-- éditable — modifier du texte directement dans la quickfix et faire :w
+	-- applique le changement dans tous les fichiers concernés d'un coup.
+	{
+		"stevearc/quicker.nvim",
+		event = "FileType qf",
+		opts = {},
+		keys = {
+			{ "<leader>q", function() require("quicker").toggle() end, desc = "Basculer la quickfix" },
+		},
+	},
+
 	-- Visualise l'historique d'annulation sous forme d'arbre (contrairement à
 	-- la liste plate de Snacks.picker.undo sur <leader>su, montre les
 	-- branches créées quand on annule puis repart dans une autre direction).
