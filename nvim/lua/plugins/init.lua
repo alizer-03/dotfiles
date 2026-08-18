@@ -256,7 +256,7 @@ return {
 			})
 
 			-- retouche certains groupes de coloration sémantique (clangd) pour qu'ils
-			-- ressortent mieux avec le thème Catppuccin (italique/gras ajoutés)
+			-- ressortent mieux avec le thème actif (italique/gras ajoutés)
 			local function tune_semantic_tokens()
 				local function based_on(group, base, extra)
 					local base_hl = vim.api.nvim_get_hl(0, { name = base, link = false })
@@ -280,46 +280,37 @@ return {
 	{
 		"m-demare/hlargs.nvim",
 		event = { "BufReadPost", "BufNewFile" },
-		dependencies = { "nvim-treesitter/nvim-treesitter", "catppuccin/nvim" },
+		dependencies = { "nvim-treesitter/nvim-treesitter", "folke/tokyonight.nvim" },
 		opts = function()
-			-- va chercher une couleur directement dans la palette Catppuccin active,
+			-- va chercher une couleur directement dans la palette tokyonight active,
 			-- avec une couleur de repli si jamais la palette n'est pas disponible
-			local ok, palette = pcall(function()
-				return require("catppuccin.palettes").get_palette("mocha")
+			local ok, colors = pcall(function()
+				return require("tokyonight.colors").setup()
 			end)
 			return {
-				color = (ok and palette.peach) or "#e0af68",
-				highlight = { bold = true }, -- compense le faible contraste de la palette pastel
+				color = (ok and colors.orange) or "#ff966c",
+				highlight = { bold = true }, -- accentue la distinction visuelle des paramètres
 				excluded_filetypes = { "markdown", "text", "help", "sh", "bash", "make" },
 			}
 		end,
 	},
 
-	-- Thème de couleurs (Catppuccin Mocha)
+	-- Thème de couleurs (tokyonight Moon)
 	{
-		"catppuccin/nvim",
-		name = "catppuccin",
+		"folke/tokyonight.nvim",
 		lazy = false, -- chargé au démarrage : c'est le thème, il doit être prêt tout de suite
 		priority = 1000, -- chargé avant tous les autres plugins non-lazy
 		opts = {
-			flavour = "mocha", -- variante sombre et douce de la palette Catppuccin
-			transparent_background = true, -- laisse l'opacité du terminal (Ghostty) transparaître au lieu d'un fond opaque
-			show_end_of_buffer = false,
-			term_colors = true,
+			style = "moon",
+			transparent = true, -- laisse l'opacité du terminal (Ghostty) transparaître au lieu d'un fond opaque
+			terminal_colors = true,
 			styles = {
-				comments = { "italic" },
-				conditionals = { "italic" },
-			},
-			integrations = {
-				blink_cmp = true,
-				treesitter = true,
-				mason = true,
-				native_lsp = { enabled = true },
+				comments = { italic = true },
 			},
 		},
 		config = function(_, opts)
-			require("catppuccin").setup(opts)
-			vim.cmd.colorscheme("catppuccin-mocha")
+			require("tokyonight").setup(opts)
+			vim.cmd.colorscheme("tokyonight-moon")
 		end,
 	},
 
@@ -397,19 +388,11 @@ return {
 	{
 		"nvimdev/lspsaga.nvim",
 		event = "LspAttach", -- se charge dès qu'un serveur LSP s'attache à un buffer
-		dependencies = { "nvim-treesitter/nvim-treesitter", "catppuccin/nvim" },
-		opts = function()
-			-- récupère le thème d'icônes Catppuccin pour le menu "code action" ;
-			-- pcall par sécurité si l'intégration n'est pas disponible
-			local ok, kind = pcall(function()
-				return require("catppuccin.groups.integrations.lsp_saga").custom_kind()
-			end)
-			return {
-				ui = {
-					kind = ok and kind or nil,
-				},
-			}
-		end,
+		dependencies = { "nvim-treesitter/nvim-treesitter" },
+		-- pas de couleur à récupérer à la main : tokyonight détecte lspsaga.nvim
+		-- automatiquement via lazy.nvim et applique ses propres groupes de
+		-- coloration, sans configuration supplémentaire à écrire ici
+		opts = {},
 		config = function(_, opts)
 			require("lspsaga").setup(opts)
 		end,

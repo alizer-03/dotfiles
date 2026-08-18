@@ -7,10 +7,10 @@ local M = {}
 -- Espace de noms dédié pour les marqueurs de couleur posés par ce module
 local ns = vim.api.nvim_create_namespace("rainbow_var")
 
--- Palette de secours utilisée si le thème Catppuccin n'est pas disponible
+-- Palette de secours utilisée si le thème tokyonight n'est pas disponible
 local palette = {
-	"#e06c75", "#e5989b", "#d19a66", "#e5c07b", "#98c379",
-	"#56b6c2", "#61afef", "#7aa2f7", "#c678dd", "#bb9af7",
+	"#ff757f", "#ff966c", "#ffc777", "#c3e88d", "#4fd6be",
+	"#86e1fc", "#82aaff", "#c099ff", "#fca7ea", "#ff007c",
 }
 
 -- Requête Treesitter : capture tous les nœuds "identifier" (noms de variables,
@@ -20,17 +20,17 @@ local queries = {
 }
 
 -- Définit les groupes de coloration RainbowVar1, RainbowVar2, ... à partir
--- de la palette Catppuccin active si disponible, sinon de la palette de secours.
+-- de la palette tokyonight active si disponible, sinon de la palette de secours.
 -- Refait à chaque changement de thème car les groupes de coloration sont
 -- réinitialisés à ce moment-là.
 local function set_highlights()
-	local ok, cp = pcall(function()
-		return require("catppuccin.palettes").get_palette("mocha")
+	local ok, colors = pcall(function()
+		return require("tokyonight.colors").setup()
 	end)
 	if ok then
 		palette = {
-			cp.red, cp.peach, cp.yellow, cp.green, cp.teal,
-			cp.sky, cp.blue, cp.lavender, cp.mauve, cp.pink,
+			colors.red, colors.orange, colors.yellow, colors.green, colors.teal,
+			colors.cyan, colors.blue, colors.magenta, colors.purple, colors.magenta2,
 		}
 	end
 	for i, color in ipairs(palette) do
