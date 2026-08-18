@@ -608,6 +608,17 @@ return {
 		},
 	},
 
+	-- Visualise l'historique d'annulation sous forme d'arbre (contrairement à
+	-- la liste plate de Snacks.picker.undo sur <leader>su, montre les
+	-- branches créées quand on annule puis repart dans une autre direction).
+	{
+		"mbbill/undotree",
+		cmd = "UndotreeToggle",
+		keys = {
+			{ "<leader>u", "<cmd>UndotreeToggle<cr>", desc = "Arbre d'annulation" },
+		},
+	},
+
 	-- Affiche un panneau flottant listant les touches disponibles dès qu'on
 	-- commence une séquence de raccourcis (ex. taper la touche leader puis
 	-- attendre) — sert d'aide-mémoire visuel pour tous les raccourcis définis
