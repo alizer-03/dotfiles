@@ -308,6 +308,25 @@ return {
 		end,
 	},
 
+	-- Prévisualise les couleurs (hex, rgb, hsl) directement dans le texte —
+	-- utile pour le CSS, qui fait partie de ton stack Web actif (LSP cssls +
+	-- prettier déjà configurés). Fork actif : l'original (norcalli/...)
+	-- n'est plus maintenu depuis longtemps.
+	{
+		"catgoose/nvim-colorizer.lua",
+		event = { "BufReadPre", "BufNewFile" },
+		opts = {
+			filetypes = { "css", "html", "javascript", "typescript" },
+			options = {
+				parsers = {
+					-- pas de couleur sur les noms anglais ("red", "blue"...),
+					-- seulement les valeurs hex/rgb/hsl explicites
+					names = { enable = false },
+				},
+			},
+		},
+	},
+
 	-- Thème de couleurs (tokyonight Moon)
 	{
 		"folke/tokyonight.nvim",
