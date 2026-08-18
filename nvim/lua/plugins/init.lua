@@ -10,7 +10,7 @@ return {
 	{
 		"saghen/blink.cmp",
 		version = "1.*",
-		event = "InsertEnter", -- ne se charge qu'en entrant en mode Insertion
+		event = { "InsertEnter", "CmdlineEnter" }, -- charge aussi dès l'ouverture de la ligne de commande, pas seulement en Insertion
 		dependencies = { "L3MON4D3/LuaSnip" },
 		opts = {
 			enabled = function()
