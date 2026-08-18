@@ -171,6 +171,19 @@ return {
 		end,
 	},
 
+	-- Fournit les requêtes Treesitter "textobjects" (dont @function.outer /
+	-- @function.inner), consommées par mini.ai ci-dessous pour que le
+	-- textobject "f" comprenne une vraie définition de fonction (signature +
+	-- corps), pas juste un motif texte "nom(". Aucun réglage ni raccourci
+	-- propre à ce plugin n'est activé ici : mini.ai reste seul à gérer les
+	-- raccourcis, ce plugin ne sert que de fournisseur de requêtes.
+	{
+		"nvim-treesitter/nvim-treesitter-textobjects",
+		branch = "main",
+		dependencies = { "nvim-treesitter/nvim-treesitter" },
+		event = "VeryLazy",
+	},
+
 	-- Colore les paires de délimiteurs ( ) [ ] { } selon leur profondeur d'imbrication
 	{
 		"HiPhish/rainbow-delimiters.nvim",
@@ -316,9 +329,36 @@ return {
 
 	-- Icônes de fichiers (utilisé par snacks.nvim pour l'explorateur/les pickers)
 	{
-		"echasnovski/mini.icons",
+		"nvim-mini/mini.icons",
 		version = false,
 		opts = {},
+	},
+
+	-- Auto-fermeture de parenthèses/guillemets ("mini.pairs"), manipulation de
+	-- guillemets/parenthèses/balises autour d'un texte ("mini.surround"),
+	-- textobjects étendus af/if, etc. ("mini.ai"), et la statusline (mode,
+	-- branche Git, diagnostics, type de fichier, position — "mini.statusline").
+	-- Même repo que mini.icons ci-dessus (module séparé, mais même auteur/écosystème).
+	{
+		"nvim-mini/mini.nvim",
+		version = false,
+		event = "VeryLazy",
+		dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
+		config = function()
+			require("mini.pairs").setup()
+			require("mini.surround").setup()
+			require("mini.ai").setup({
+				custom_textobjects = {
+					-- Remplace le "f" par défaut (motif texte "nom(", pensé
+					-- pour un appel de fonction) par une version Treesitter,
+					-- qui comprend la vraie structure du code : signature +
+					-- corps entier, pour les langages dont le parseur est
+					-- installé (C, Lua, Python, HTML, CSS, JS, TS).
+					f = require("mini.ai").gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" }),
+				},
+			})
+			require("mini.statusline").setup()
+		end,
 	},
 
 	-- Suite d'utilitaires : tableau de bord, explorateur de fichiers, pickers
