@@ -19,6 +19,7 @@ export FZF_DEFAULT_OPTS=" \
 --color=bg+:#2f334d,bg:#222436,spinner:#ffc777,hl:#ff966c \
 --color=fg:#c8d3f5,header:#4fd6be,info:#0db9d7,pointer:#c099ff \
 --color=marker:#c3e88d,fg+:#c8d3f5,prompt:#82aaff,hl+:#ff966c"
+export RIPGREP_CONFIG_PATH="$HOME/.config/ripgrep/rgrc"
 # Éditeur par défaut (outils CLI : git commit sans -m, crontab -e, etc.)
 export EDITOR='nvim'
 export VISUAL='nvim'
