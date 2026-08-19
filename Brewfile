@@ -1,7 +1,8 @@
-# Improved shell history for zsh, bash, fish and nushell
 brew "atuin"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
+# Bash scripts that integrate bat with various command-line tools
+brew "bat-extras"
 # Modern, maintained replacement for ls
 brew "eza"
 # Simple, fast and user-friendly alternative to find
@@ -20,6 +21,8 @@ brew "glow"
 brew "lazygit"
 # Deep clean and optimize your Mac
 brew "mole"
+# Copy real files to the macOS clipboard from the terminal
+brew "neilberkman/clippy/clippy"
 # Incremental parsing library
 brew "tree-sitter"
 # Ambitious Vim-fork focused on extensibility and agility
@@ -32,10 +35,14 @@ brew "python@3.14"
 brew "pipx"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
+# Static analysis tool for shell scripts
+brew "shellcheck"
 # Cross-shell prompt for astronauts
 brew "starship"
 # Very fast implementation of tldr in Rust
 brew "tealdeer"
+# Terminal multiplexer
+brew "tmux"
 # Parser generator tool
 brew "tree-sitter-cli"
 # Blazing fast terminal file manager written in Rust, based on async I/O
@@ -46,7 +53,6 @@ brew "zoxide"
 brew "zsh-autosuggestions"
 # Fish shell like syntax highlighting for zsh
 brew "zsh-syntax-highlighting"
-# AeroSpace is an i3-like tiling window manager for macOS
 # Enable Windows-like alt-tab
 cask "alt-tab"
 # Web browser focusing on privacy
