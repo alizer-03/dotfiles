@@ -467,6 +467,25 @@ return {
 		},
 	},
 
+	-- Repositionne la ligne de commande (`:`, `/`, `?`) dans une fenêtre
+	-- flottante centrée plutôt qu'en bas de l'écran. Compatible nativement
+	-- avec blink.cmp pour la complétion en ligne de commande (déjà
+	-- configurée plus haut) — aucun réglage supplémentaire nécessaire pour
+	-- ça. Exige Neovim >= 0.12 et le système ui2 expérimental (activé plus
+	-- bas). Chargement OBLIGATOIREMENT immédiat (lazy = false, pas de lazy
+	-- loading sur un événement) : le plugin s'auto-initialise via
+	-- l'événement UIEnter lui-même, donc le charger plus tard (ex.
+	-- VeryLazy, qui survient après UIEnter) le fait rater cet événement et
+	-- le plugin ne s'active jamais.
+	{
+		"rachartier/tiny-cmdline.nvim",
+		lazy = false,
+		init = function()
+			vim.o.cmdheight = 0
+			require("vim._core.ui2").enable({})
+		end,
+	},
+
 	-- Suite d'utilitaires : tableau de bord, explorateur de fichiers, pickers
 	-- (recherche floue de fichiers/texte/buffers/diagnostics/etc.), LazyGit intégré
 	{
