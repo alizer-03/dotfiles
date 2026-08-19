@@ -438,6 +438,35 @@ return {
 		end,
 	},
 
+	-- Barre d'onglets pour les buffers ouverts (onglets réordonnables,
+	-- redimensionnement automatique, icônes). Utilise mini.icons plutôt que
+	-- nvim-web-devicons pour les icônes : mini.icons peut se faire passer
+	-- pour nvim-web-devicons (méthode officielle du projet), ce qui évite
+	-- d'installer un deuxième fournisseur d'icônes redondant avec celui déjà
+	-- en place ci-dessus. Raccourcis volontairement réduits au strict
+	-- nécessaire (précédent/suivant/fermer) — le mode "saut par lettre" et le
+	-- tri par commande existent mais n'ont pas d'utilité prouvée pour l'instant.
+	{
+		"romgrk/barbar.nvim",
+		event = "VeryLazy",
+		dependencies = {
+			"lewis6991/gitsigns.nvim", -- déjà présent : indicateurs Git sur les onglets
+		},
+		init = function()
+			vim.g.barbar_auto_setup = false
+			package.preload["nvim-web-devicons"] = function()
+				require("mini.icons").mock_nvim_web_devicons()
+				return package.loaded["nvim-web-devicons"]
+			end
+		end,
+		opts = {},
+		keys = {
+			{ "<S-l>", "<cmd>BufferNext<cr>", desc = "Buffer suivant" },
+			{ "<S-h>", "<cmd>BufferPrevious<cr>", desc = "Buffer précédent" },
+			{ "<leader>bc", "<cmd>BufferClose<cr>", desc = "Fermer le buffer" },
+		},
+	},
+
 	-- Suite d'utilitaires : tableau de bord, explorateur de fichiers, pickers
 	-- (recherche floue de fichiers/texte/buffers/diagnostics/etc.), LazyGit intégré
 	{
@@ -700,6 +729,7 @@ return {
 				{ "<leader>h", group = "Hunks Git" },
 				{ "<leader>c", group = "Code" },
 				{ "<leader>t", group = "Terminal" },
+				{ "<leader>b", group = "Buffers" },
 			},
 		},
 	},
