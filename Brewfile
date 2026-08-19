@@ -1,4 +1,3 @@
-tap "nikitabobko/tap"
 # Improved shell history for zsh, bash, fish and nushell
 brew "atuin"
 # Clone of cat(1) with syntax highlighting and Git integration
@@ -48,7 +47,6 @@ brew "zsh-autosuggestions"
 # Fish shell like syntax highlighting for zsh
 brew "zsh-syntax-highlighting"
 # AeroSpace is an i3-like tiling window manager for macOS
-cask "nikitabobko/tap/aerospace", trusted: true
 # Enable Windows-like alt-tab
 cask "alt-tab"
 # Web browser focusing on privacy
