@@ -55,10 +55,10 @@ unset_alt   = { fg = "#fca7ea", bg = "#3b4261" }
 
 [status]
 overall   = { fg = "#c8d3f5", bg = "#1e2030" }
-separator_open    = ""
-separator_close   = ""
-# sep_left  = { open = "", close = "" }
-# sep_right = { open = "", close = "" }
+separator_open    = ""
+separator_close   = ""
+# sep_left  = { open = "", close = "" }
+# sep_right = { open = "", close = "" }
 
 # Progress
 progress_label  = { fg = "#c8d3f5", bold = true }
@@ -103,9 +103,9 @@ border   = { fg = "#0db9d7" }
 active   = { fg = "#c8d3f5", bg = "#363c58" }
 inactive = { fg = "#c8d3f5" }
 
-icon_file    = ""
-icon_folder  = ""
-icon_command = ""
+icon_file    = ""
+icon_folder  = ""
+icon_command = ""
 
 # : }}}
 
@@ -164,9 +164,9 @@ title_info  = { fg = "#0db9d7" }
 title_warn  = { fg = "#ffc777" }
 title_error = { fg = "#c53b53" }
 
-icon_error = ""
-icon_warn = ""
-icon_info = ""
+icon_error = ""
+icon_warn = ""
+icon_info = ""
 
 # : }}}
 
@@ -205,13 +205,12 @@ rules = [
 	# { mime = "inode/x-empty", fg = "#ff757f" },
 
 	# Special files
-	{ name = "*", is = "orphan", bg = "#ff757f" },
-	{ name = "*", is = "exec"  , fg = "#c3e88d" },
+	{ url = "*", is = "orphan", bg = "#ff757f" },
+	{ url = "*", is = "exec"  , fg = "#c3e88d" },
 
 	# Fallback
-	{ name = "*/", fg = "#82aaff" },
-	{ name = "*", fg = "#c8d3f5" }
+	{ url = "*/", fg = "#82aaff" },
+	{ url = "*", fg = "#c8d3f5" }
 ]
 
 # : }}}
-
