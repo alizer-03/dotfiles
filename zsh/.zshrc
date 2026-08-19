@@ -35,6 +35,7 @@ alias mv='mv -i'
 alias sz='source ~/.zshrc'
 alias c='clear'
 alias cat='bat'
+alias man='batman'
 alias lg='lazygit'
 alias y='yazi'
 alias v='nvim'
@@ -44,7 +45,7 @@ alias ...="cd ../.."
 alias wcc="cc -Wall -Wextra -Werror"
 # Aide rapide (tldr puis man en secours)
 help() {
-	tldr "$1" 2>/dev/null || man "$1"
+	tldr "$1" 2>/dev/null || batman "$1"
 }
 # Plugins
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh

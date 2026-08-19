@@ -388,6 +388,22 @@ return {
 		end,
 	},
 
+	-- Curseur animé avec un effet de traînée (esthétique pure). Aucune
+	-- interaction avec le reste de la config : pas de module d'animation de
+	-- curseur ailleurs (mini.nvim n'inclut pas mini.animate ici), donc rien à
+	-- désactiver pour éviter un doublon.
+	{
+		"sphamba/smear-cursor.nvim",
+		event = "VeryLazy",
+		opts = {
+			-- "none" plutôt qu'une couleur fixe : reprend la couleur de
+			-- curseur réelle du terminal, cohérente avec tokyonight-moon
+			-- sans rien coder en dur ici
+			cursor_color = "none",
+			hide_target_hack = true,
+		},
+	},
+
 	-- Icônes de fichiers (utilisé par snacks.nvim pour l'explorateur/les pickers)
 	{
 		"nvim-mini/mini.icons",
