@@ -1,3 +1,19 @@
+-- Retire les raccourcis LSP natifs (Neovim 0.11+) qui font doublon exact
+-- avec Lspsaga ci-dessous (rename/code_action/references/outline) — un seul
+-- réflexe à retenir pour ces 4 actions plutôt que deux chemins équivalents.
+-- gri (implementation) et grt (type_definition) restent natifs : Lspsaga
+-- n'a pas d'équivalent direct pour ceux-là dans cette config, donc aucune
+-- perte de fonctionnalité.
+vim.api.nvim_create_autocmd("VimEnter", {
+	once = true,
+	callback = function()
+		for _, key in ipairs({ "grn", "gra", "grr", "gO" }) do
+			pcall(vim.keymap.del, "n", key)
+		end
+		pcall(vim.keymap.del, "x", "gra") -- gra existe aussi en mode visuel
+	end,
+})
+
 -- Raccourcis liés au LSP (ici Lspsaga), définis uniquement sur les buffers où
 -- un client LSP est réellement attaché — pas de raccourcis fantômes sur un
 -- fichier texte quelconque où il n'y aurait rien à faire.
@@ -5,6 +21,18 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("lsp-keymaps", { clear = true }),
 	callback = function(args)
 		local bufnr = args.buf
+
+		-- Neovim 0.11+ règle automatiquement 'formatexpr' sur le formatage LSP
+		-- (clangd pour le C) dès qu'un serveur qui le supporte s'attache — ce
+		-- qui fait que gq/gqq appellerait clangd directement, en contournant
+		-- entièrement conform.nvim et son scoping c_formatter_42 vs
+		-- clang_format (confirmé : gqq a réindenté une ligne du dossier 42
+		-- avec le style clangd, pas celui attendu). On vide 'formatexpr' pour
+		-- que gq retombe sur le comportement natif de Vim (retour à la ligne
+		-- simple, sans appel LSP) ; le formatage reste uniquement accessible
+		-- via <leader>cf (conform.nvim), qui applique le bon formateur selon
+		-- le dossier.
+		vim.bo[bufnr].formatexpr = ""
 
 		-- petit raccourci local pour éviter de répéter { buffer = bufnr, ... } à chaque ligne
 		local function map(mode, lhs, rhs, desc)
