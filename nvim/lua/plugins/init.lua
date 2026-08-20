@@ -435,6 +435,27 @@ return {
 		end,
 	},
 
+	-- Saut rapide vers n'importe quel endroit visible à l'écran (labels sur les
+	-- correspondances), amélioration des motions f/F/t/T, et action à distance
+	-- (ex. "yr" + label = copier du texte sans déplacer le curseur jusque-là).
+	-- s/S ne sont volontairement pas déclarés ici (contrairement à l'exemple
+	-- par défaut du plugin) : les déclarer, même à `false`, crée un raccourci
+	-- "vide" qui bloque tout repli vers mini.surround/le S natif — ne pas les
+	-- déclarer du tout les laisse intacts. Le saut est donc sur <leader><leader>
+	-- à la place — r/R/Ctrl+S (ligne de commande) restent par défaut, vérifiés
+	-- sans conflit avec le reste.
+	{
+		"folke/flash.nvim",
+		event = "VeryLazy",
+		opts = {},
+		keys = {
+			{ "<leader><leader>", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Saut rapide (Flash)" },
+			{ "r", mode = "o", function() require("flash").remote() end, desc = "Action à distance (Flash)" },
+			{ "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Recherche Treesitter (Flash)" },
+			{ "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Bascule Flash dans la recherche" },
+		},
+	},
+
 	-- Barre d'onglets pour les buffers ouverts (onglets réordonnables,
 	-- redimensionnement automatique, icônes). Utilise mini.icons plutôt que
 	-- nvim-web-devicons pour les icônes : mini.icons peut se faire passer
