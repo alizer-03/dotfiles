@@ -1,9 +1,13 @@
 -- Retire les raccourcis LSP natifs (Neovim 0.11+) qui font doublon exact
 -- avec Lspsaga ci-dessous (rename/code_action/references/outline) — un seul
--- réflexe à retenir pour ces 4 actions plutôt que deux chemins équivalents.
--- gri (implementation) et grt (type_definition) restent natifs : Lspsaga
--- n'a pas d'équivalent direct pour ceux-là dans cette config, donc aucune
--- perte de fonctionnalité.
+-- réflexe à retenir pour ces 4 actions plutôt que deux chemins équivalents,
+-- sans perte de contenu ni de confort (nombre de touches identique).
+-- gri (implementation) et grt (type_definition) restent natifs :
+-- - grt n'a aucun équivalent Lspsaga dans cette config
+-- - gri chevauche en partie <leader>lf (Lspsaga finder inclut déjà les
+--   implémentations par défaut), mais gardé volontairement pour le saut
+--   direct quand il n'y en a qu'une seule — plus rapide que d'ouvrir une
+--   liste à chaque fois
 vim.api.nvim_create_autocmd("VimEnter", {
 	once = true,
 	callback = function()

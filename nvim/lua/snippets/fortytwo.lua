@@ -106,7 +106,7 @@ M.python = {
 	-- code sous ce bloc ne s'exécute que si le fichier est lancé
 	-- directement (pas quand il est importé depuis un autre fichier)
 	s("main", {
-		t({ 'if __name__ == "__main__":', "\t" }),
+		t({ 'if __name__ == "__main__":', "    " }),
 		i(1),
 	}),
 }

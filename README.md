@@ -52,6 +52,11 @@ ln -sf ~/dotfiles/ripgrep/rgrc ~/.config/ripgrep/rgrc
 ln -sf ~/dotfiles/prettier/.prettierrc ~/.prettierrc
 ln -sf ~/dotfiles/.editorconfig ~/Documents/Code/.editorconfig
 
+# 42-header.nvim : copie le modèle d'identité et renseigne-y ton login et ton
+# email 42 (fichier non suivi par Git, jamais versionné)
+cp ~/dotfiles/nvim/lua/core/identity.lua.example ~/dotfiles/nvim/lua/core/identity.lua
+# puis édite ~/dotfiles/nvim/lua/core/identity.lua pour renseigner tes identifiants
+
 # bat : le thème n'est pas embarqué nativement, il faut l'installer une fois
 mkdir -p ~/.config/bat/themes
 curl -o ~/.config/bat/themes/tokyonight_moon.tmTheme https://raw.githubusercontent.com/folke/tokyonight.nvim/main/extras/sublime/tokyonight_moon.tmTheme
@@ -60,7 +65,7 @@ bat cache --build
 
 > Si `~/.config/nvim` (ou un autre fichier/dossier cible) existe déjà sur la machine, renomme-le ou supprime-le avant de créer le lien symbolique — sinon la commande `ln` échoue silencieusement.
 
-Ouvre ensuite Neovim : `lazy.nvim` installe automatiquement tous les plugins listés dans `nvim/lua/plugins/init.lua`, puis `mason-lspconfig` installe les serveurs LSP (clangd, pyright, ruff, html, cssls, ts_ls, eslint) au premier fichier ouvert du langage correspondant.
+Ouvre ensuite Neovim : `lazy.nvim` installe automatiquement tous les plugins listés dans `nvim/lua/plugins/init.lua`, puis `mason-lspconfig` installe les serveurs LSP (clangd, pyright, ruff, html, cssls, ts_ls, eslint, lua_ls) au premier fichier ouvert du langage correspondant.
 
 Deux étapes manuelles, volontairement laissées hors de ce dépôt :
 - **TPM** (gestionnaire de plugins tmux) n'est pas embarqué dans ce dépôt :

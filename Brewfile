@@ -54,10 +54,12 @@ brew "zsh-autosuggestions"
 # Fish shell like syntax highlighting for zsh
 brew "zsh-syntax-highlighting"
 # Enable Windows-like alt-tab
+# Auto-update propre à l'app : `brew bundle check` peut la signaler "à mettre à jour" sans que ce soit un vrai problème
 cask "alt-tab"
 # Web browser focusing on privacy
 cask "brave-browser"
 # Anthropic's official Claude AI desktop app
+# Auto-update propre à l'app : `brew bundle check` peut la signaler "à mettre à jour" sans que ce soit un vrai problème
 cask "claude"
 # Voice and text chat software
 cask "discord"

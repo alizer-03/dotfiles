@@ -1,7 +1,5 @@
 [mgr]
 prepend_keymap = [
   { on = "e", run = "shell 'code \"$@\"' --confirm", desc = "Edit with VSCode" },
-  { on = "o", run = "open", desc = "Edit or open selected files" },
-  { on = "<Enter>", run = "enter", desc = "Enter the child directory" },
   { on = [ "f", "c" ], run = "plugin clippy", desc = "Copy with Clippy" },
 ]

@@ -12,6 +12,7 @@
 	navigate = true
 	dark = true
 	side-by-side = true
+	syntax-theme = tokyonight_moon
 [interactive]
 	diffFilter = delta --color-only
 [alias]

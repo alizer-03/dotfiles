@@ -11,10 +11,11 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 eval "$(starship init zsh)"
 # Outils
 eval "$(zoxide init zsh --cmd cd)"
-source <(fzf --zsh)
-eval "$(atuin init zsh --disable-up-arrow)"
+source <(fzf --zsh)                          # Alt+C / Ctrl+T (fzf)
+eval "$(atuin init zsh --disable-up-arrow)"  # Ctrl+R : repris par atuin (fzf le définit avant, volontairement écrasé)
 export FZF_DEFAULT_COMMAND='fd --type f --exclude .git'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND='fd --type d --exclude .git'
 export FZF_DEFAULT_OPTS=" \
 --color=bg+:#2f334d,bg:#222436,spinner:#ffc777,hl:#ff966c \
 --color=fg:#c8d3f5,header:#4fd6be,info:#0db9d7,pointer:#c099ff \

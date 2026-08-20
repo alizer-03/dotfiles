@@ -83,9 +83,6 @@ return {
 			local caps = require("blink.cmp").get_lsp_capabilities()
 			vim.lsp.config("*", {
 				capabilities = caps,
-				on_attach = function(_, bufnr)
-					vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
-				end,
 			})
 			require("lsp.servers").setup_server_configs()
 		end,
@@ -115,7 +112,7 @@ return {
 		dependencies = { "williamboman/mason.nvim", "neovim/nvim-lspconfig" },
 		opts = function()
 			return {
-				ensure_installed = require("lsp.servers").get_server_list(), -- { "clangd" }
+				ensure_installed = require("lsp.servers").get_server_list(), -- clangd, pyright, ruff, html, cssls, ts_ls, eslint, lua_ls
 				automatic_installation = true,
 			}
 		end,
@@ -461,8 +458,8 @@ return {
 		end,
 		opts = {},
 		keys = {
-			{ "<S-l>", "<cmd>BufferNext<cr>", desc = "Buffer suivant" },
-			{ "<S-h>", "<cmd>BufferPrevious<cr>", desc = "Buffer précédent" },
+			{ "]b", "<cmd>BufferNext<cr>", desc = "Buffer suivant" },
+			{ "[b", "<cmd>BufferPrevious<cr>", desc = "Buffer précédent" },
 			{ "<leader>bc", "<cmd>BufferClose<cr>", desc = "Fermer le buffer" },
 		},
 	},
@@ -537,6 +534,13 @@ return {
 
 			-- Terminal
 			{ "<leader>tt", function() Snacks.terminal() end, desc = "Terminal flottant (bascule)" },
+
+			-- Navigation entre occurrences du mot sous le curseur (surlignage
+			-- déjà actif via words.enabled ci-dessus) — ]w/[w plutôt que ]]/[[
+			-- (recommandation par défaut de Snacks) pour ne pas écraser le saut
+			-- de section natif de Vim, que tu utilises déjà
+			{ "]w", function() Snacks.words.jump(vim.v.count1) end, desc = "Occurrence suivante du mot" },
+			{ "[w", function() Snacks.words.jump(-vim.v.count1) end, desc = "Occurrence précédente du mot" },
 
 			-- Introspection Neovim (sous-ensemble volontairement réduit à l'essentiel)
 			{ "<leader>sd", function() Snacks.picker.diagnostics() end, desc = "Diagnostics du projet" },
@@ -643,8 +647,11 @@ return {
 			formatters_by_ft = {
 				-- les deux formateurs C sont mutuellement exclusifs via leur
 				-- "condition" ci-dessus : un seul s'exécute réellement selon
-				-- que le fichier est dans un dossier "42" ou non
-				c = { "c_formatter_42", "clang_format" },
+				-- que le fichier est dans un dossier "42" ou non.
+				-- stop_after_first en filet de sécurité supplémentaire : si les
+				-- deux conditions passaient un jour par erreur, un seul
+				-- formateur tournerait quand même (pas les deux à la suite).
+				c = { "c_formatter_42", "clang_format", stop_after_first = true },
 				python = { "ruff_format" },
 				javascript = { "prettier" },
 				typescript = { "prettier" },

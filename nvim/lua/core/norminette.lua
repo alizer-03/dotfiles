@@ -13,7 +13,7 @@ local function parse(output, bufnr)
 	local diags = {}
 	for raw in output:gmatch("[^\r\n]+") do
 		local line = raw:gsub("\27%[[%d;]*m", "") -- retire les codes couleur ANSI éventuels
-		local kind, code, lnum, col, msg = line:match("^(%a+):%s+(%S+)%s+%(line:%s*(%d+),%s+col:%s*(%d+)%):%s*(.+)$")
+		local code, lnum, col, msg = line:match("^%a+:%s+(%S+)%s+%(line:%s*(%d+),%s+col:%s*(%d+)%):%s*(.+)$")
 		if code then
 			-- norminette compte les lignes/colonnes à partir de 1, Neovim à partir de 0
 			local l = math.max((tonumber(lnum) or 1) - 1, 0)
@@ -24,7 +24,9 @@ local function parse(output, bufnr)
 				end_lnum = l,
 				col = c,
 				end_col = c + 1,
-				severity = (kind == "Notice") and vim.diagnostic.severity.WARN or vim.diagnostic.severity.ERROR,
+				-- norminette n'émet en pratique que des "Error:" (pas de sévérité
+				-- distincte type "Notice"/warning observée dans ses sorties réelles)
+				severity = vim.diagnostic.severity.ERROR,
 				source = "norminette",
 				code = code,
 				message = (msg:gsub("^%s+", ""):gsub("%s+$", "")),
@@ -34,24 +36,42 @@ local function parse(output, bufnr)
 	return diags
 end
 
--- Lance norminette en tâche de fond sur le fichier du buffer donné, et met
--- à jour les diagnostics une fois le résultat reçu (asynchrone, ne bloque
--- jamais la saisie).
-local function run(bufnr)
-	bufnr = (bufnr and bufnr ~= 0) and bufnr or vim.api.nvim_get_current_buf()
-	if not enabled or not vim.api.nvim_buf_is_valid(bufnr) then
-		return
+-- Centralise les conditions qui décident si norminette doit tourner sur ce
+-- buffer, et pourquoi sinon — utilisé en silence par le déclenchement
+-- automatique (schedule/run), et pour donner un vrai message d'explication
+-- à la commande manuelle :Norminette.
+local function why_not(bufnr)
+	if not enabled then
+		return "désactivé (:NorminetteToggle)"
+	end
+	if not vim.api.nvim_buf_is_valid(bufnr) then
+		return "buffer invalide"
 	end
 	local name = vim.api.nvim_buf_get_name(bufnr)
 	if not name:match("%.[ch]$") then
-		return -- ne s'exécute que sur les fichiers .c/.h
+		return "pas un fichier .c/.h"
 	end
 	if not name:match("/42/") then
-		return -- ne s'applique qu'aux projets situés dans un dossier "42" (norme propre à ce cursus) ; ailleurs, un formateur classique (clang-format) prend le relais
+		-- ne s'applique qu'aux projets situés dans un dossier "42" (norme propre à
+		-- ce cursus) ; ailleurs, un formateur classique (clang-format) prend le relais
+		return 'hors d\'un dossier "42"'
 	end
 	if vim.fn.executable("norminette") == 0 then
-		return -- outil non installé : on abandonne silencieusement plutôt que d'afficher une erreur à chaque frappe
+		return "norminette introuvable dans le PATH"
 	end
+	return nil
+end
+
+-- Lance norminette en tâche de fond sur le fichier du buffer donné, et met
+-- à jour les diagnostics une fois le résultat reçu (asynchrone, ne bloque
+-- jamais la saisie). Silencieux si les conditions de why_not() ne sont pas
+-- réunies : comportement voulu pour le déclenchement automatique.
+local function run(bufnr)
+	bufnr = (bufnr and bufnr ~= 0) and bufnr or vim.api.nvim_get_current_buf()
+	if why_not(bufnr) then
+		return
+	end
+	local name = vim.api.nvim_buf_get_name(bufnr)
 
 	-- si une exécution précédente est encore en cours, on l'annule : seul le
 	-- dernier état du fichier nous intéresse
@@ -74,6 +94,18 @@ local function run(bufnr)
 			vim.diagnostic.set(ns, bufnr, parse(out, bufnr))
 		end)
 	)
+end
+
+-- Relance run() sur tous les buffers chargés (utilisé par NorminetteToggle à
+-- la réactivation, pour rafraîchir tous les fichiers ouverts et pas
+-- seulement celui affiché à l'instant — symétrique avec la désactivation,
+-- qui efface les diagnostics de tous les buffers d'un coup)
+local function run_all()
+	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+		if vim.api.nvim_buf_is_loaded(buf) then
+			run(buf)
+		end
+	end
 end
 
 -- Anti-rebond (debounce) : regroupe les déclenchements rapprochés (ex. plusieurs
@@ -117,7 +149,13 @@ function M.setup()
 
 	-- commandes manuelles, utiles pour forcer une vérification ou débrayer temporairement
 	vim.api.nvim_create_user_command("Norminette", function()
-		run(0)
+		local bufnr = vim.api.nvim_get_current_buf()
+		local reason = why_not(bufnr)
+		if reason then
+			vim.notify("norminette : rien à faire (" .. reason .. ")", vim.log.levels.WARN)
+			return
+		end
+		run(bufnr)
 	end, { desc = "Run norminette on the current C file" })
 
 	vim.api.nvim_create_user_command("NorminetteClear", function()
@@ -129,7 +167,7 @@ function M.setup()
 		if not enabled then
 			vim.diagnostic.reset(ns)
 		else
-			run(0)
+			run_all()
 		end
 		vim.notify("norminette " .. (enabled and "enabled" or "disabled"))
 	end, { desc = "Toggle norminette diagnostics on save" })

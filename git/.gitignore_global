@@ -17,7 +17,9 @@ venv/
 # C
 *.o
 *.out
+*.a
 *.dSYM/
+compile_commands.json
 
 # VSCode
 .vscode/
