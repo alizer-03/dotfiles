@@ -146,9 +146,11 @@ return {
 		config = function()
 			require("nvim-treesitter").setup()
 			-- parseurs installés : C/Lua (existant) + Python, HTML, CSS, JavaScript,
-			-- TypeScript (langages hors C : Python/IA et Web)
+			-- TypeScript (langages hors C : Python/IA et Web) + bash/json/markdown
+			-- (scripts, configs et rendu via render-markdown.nvim ci-dessous)
 			require("nvim-treesitter").install({
 				"c", "lua", "python", "html", "css", "javascript", "typescript",
+				"bash", "json", "markdown", "markdown_inline",
 			})
 
 			-- active treesitter uniquement sur les filetypes couverts ci-dessus
@@ -162,6 +164,10 @@ return {
 						css = true,
 						javascript = true,
 						typescript = true,
+						bash = true,
+						json = true,
+						markdown = true,
+						markdown_inline = true,
 					}
 					if langs[args.match] then
 						pcall(vim.treesitter.start)
@@ -186,6 +192,19 @@ return {
 		branch = "main",
 		dependencies = { "nvim-treesitter/nvim-treesitter" },
 		event = "VeryLazy",
+	},
+
+	-- Rendu visuel des fichiers markdown directement dans le buffer (titres,
+	-- cases à cocher, callouts, liens) — pas une prévisualisation externe,
+	-- le fichier reste éditable normalement.
+	{
+		"MeanderingProgrammer/render-markdown.nvim",
+		ft = "markdown",
+		dependencies = {
+			"nvim-treesitter/nvim-treesitter",
+			"nvim-mini/mini.icons", -- déjà présent dans cette config, réutilisé pour les icônes
+		},
+		opts = {},
 	},
 
 	-- Pliage de code : aperçu du contenu plié sans avoir à l'ouvrir (zK), et
@@ -431,6 +450,12 @@ return {
 					f = require("mini.ai").gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" }),
 				},
 			})
+			-- mini.statusline ne règle pas laststatus lui-même (vérifié : contrairement
+			-- à des alternatives comme lualine, il se contente de vérifier sa valeur) ;
+			-- sans ce réglage, laststatus reste à sa valeur par défaut (2 = une
+			-- statusline par split), donc plusieurs infos répétées à chaque split
+			-- ouvert. 3 = une seule statusline globale pour toute la fenêtre.
+			vim.opt.laststatus = 3
 			require("mini.statusline").setup()
 		end,
 	},
@@ -477,7 +502,13 @@ return {
 				return package.loaded["nvim-web-devicons"]
 			end
 		end,
-		opts = {},
+		opts = {
+			-- offset propre de la ligne d'onglets quand undotree (<leader>u) est
+			-- ouvert en fenêtre latérale, plutôt que de se superposer dessus
+			sidebar_filetypes = {
+				undotree = { text = "undotree", align = "left" },
+			},
+		},
 		keys = {
 			{ "]b", "<cmd>BufferNext<cr>", desc = "Buffer suivant" },
 			{ "[b", "<cmd>BufferPrevious<cr>", desc = "Buffer précédent" },
@@ -555,6 +586,7 @@ return {
 
 			-- Terminal
 			{ "<leader>tt", function() Snacks.terminal() end, desc = "Terminal flottant (bascule)" },
+			{ "<leader>th", function() Snacks.terminal("htop") end, desc = "htop (moniteur système)" },
 
 			-- Navigation entre occurrences du mot sous le curseur (surlignage
 			-- déjà actif via words.enabled ci-dessus) — ]w/[w plutôt que ]]/[[
@@ -702,16 +734,20 @@ return {
 		end,
 	},
 
-	-- Linting pour les fichiers hors couverture LSP — actuellement seulement
-	-- les scripts shell (.sh), aucun linter n'était en place dessus. Pas
-	-- activé sur zsh/.zshrc : shellcheck ne supporte pas officiellement ce
-	-- dialecte (faux positifs connus sur la syntaxe propre à zsh).
+	-- Linting pour les fichiers hors couverture LSP — scripts shell (.sh) et C.
+	-- Pas activé sur zsh/.zshrc : shellcheck ne supporte pas officiellement ce
+	-- dialecte (faux positifs connus sur la syntaxe propre à zsh). cppcheck
+	-- est complémentaire à clangd --clang-tidy (déjà actif via lsp/servers.lua),
+	-- pas redondant : il détecte d'autres catégories de bugs (fuites mémoire,
+	-- débordements, constructions suspectes) — même logique que ruff+pyright
+	-- pour Python. Installation séparée requise : `brew install cppcheck`.
 	{
 		"mfussenegger/nvim-lint",
 		event = { "BufReadPost", "BufWritePost" },
 		config = function()
 			require("lint").linters_by_ft = {
 				sh = { "shellcheck" },
+				c = { "cppcheck" },
 			}
 			vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost", "InsertLeave" }, {
 				callback = function()
@@ -741,7 +777,18 @@ return {
 	{
 		"stevearc/quicker.nvim",
 		event = "FileType qf",
-		opts = {},
+		opts = {
+			-- Raccourci scopé au buffer quickfix par le plugin lui-même
+			-- (mécanisme dédié, différent du "keys" de lazy.nvim ci-dessous
+			-- qui sert au chargement paresseux global) : ">" affiche/masque
+			-- les lignes de contexte autour de chaque résultat (façon
+			-- grep -C), sans ouvrir chaque fichier un par un — désactivé par
+			-- défaut même dans la config par défaut du plugin (touche
+			-- laissée en exemple commenté)
+			keys = {
+				{ ">", function() require("quicker").toggle_expand() end, desc = "Contexte autour des résultats" },
+			},
+		},
 		keys = {
 			{ "<leader>q", function() require("quicker").toggle() end, desc = "Basculer la quickfix" },
 		},
@@ -755,6 +802,23 @@ return {
 		cmd = "UndotreeToggle",
 		keys = {
 			{ "<leader>u", "<cmd>UndotreeToggle<cr>", desc = "Arbre d'annulation" },
+		},
+	},
+    
+    -- Agrandit temporairement le split courant en plein écran (bascule),
+	-- puis restaure exactement la disposition d'origine des splits (pas
+	-- juste un partage à parts égales) — vérifié sur le code source du
+	-- plugin (utilise winrestcmd() pour capturer/restaurer la disposition
+	-- précise). Natif Vim (Ctrl+W _ / Ctrl+W =) peut agrandir, mais son
+	-- rétablissement ne rend pas une disposition asymétrique d'origine.
+	{
+		"szw/vim-maximizer",
+		cmd = "MaximizerToggle",
+		init = function()
+			vim.g.maximizer_set_default_mapping = 0 -- raccourci défini nous-mêmes ci-dessous, pas <F3>
+		end,
+		keys = {
+			{ "<leader>mx", "<cmd>MaximizerToggle<cr>", desc = "Agrandir/restaurer le split" },
 		},
 	},
 

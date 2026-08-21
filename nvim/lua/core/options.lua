@@ -12,6 +12,7 @@ opt.mouse = "a"
 opt.completeopt = { "menu", "menuone", "noselect" }
 opt.updatetime = 300
 opt.timeoutlen = 700
+opt.autoread = true -- recharge un fichier modifié en dehors de Neovim (git pull/checkout, etc.) au lieu d'avertir
 
 -- Indentation
 opt.tabstop = 4

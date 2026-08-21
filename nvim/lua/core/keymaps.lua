@@ -1,3 +1,14 @@
+-- U (par défaut : annuler toute la ligne, quasi jamais utilisé) redéfini en
+-- redo, raccourci plus rapide que Ctrl+R
+vim.keymap.set("n", "U", "<C-r>", { desc = "Redo" })
+
+-- Navigation entre splits Neovim (indépendant de la navigation entre
+-- panneaux tmux, qui passe par le préfixe tmux, pas Ctrl)
+vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Split de gauche" })
+vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Split du dessous" })
+vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Split du dessus" })
+vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Split de droite" })
+
 -- Retire les raccourcis LSP natifs (Neovim 0.11+) qui font doublon exact
 -- avec Lspsaga ci-dessous (rename/code_action/references/outline) — un seul
 -- réflexe à retenir pour ces 4 actions plutôt que deux chemins équivalents,

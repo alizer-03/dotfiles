@@ -7,6 +7,20 @@ autocmd("TextYankPost", {
 	end,
 })
 
+-- Rouvre un fichier à la dernière ligne éditée plutôt qu'à la ligne 1
+autocmd("BufReadPost", {
+	callback = function(args)
+		local mark = vim.api.nvim_buf_get_mark(args.buf, '"')
+		local line_count = vim.api.nvim_buf_line_count(args.buf)
+		if mark[1] > 0 and mark[1] <= line_count then
+			vim.api.nvim_win_set_cursor(0, mark)
+			vim.schedule(function()
+				vim.cmd("normal! zz")
+			end)
+		end
+	end,
+})
+
 -- Retire automatiquement les espaces en fin de ligne à chaque sauvegarde
 -- (sauf en Markdown, où deux espaces en fin de ligne sont un retour à la ligne volontaire)
 autocmd("BufWritePre", {
