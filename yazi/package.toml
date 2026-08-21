@@ -8,6 +8,11 @@ use = "Gallardo994/clippy"
 rev = "8ce5541"
 hash = "977c6f4ffceada33ced20d941f1defab"
 
+[[plugin.deps]]
+use = "uhs-robert/recycle-bin"
+rev = "82da16a"
+hash = "7383d80862d3cdcc85f8658dac7b90c2"
+
 [[flavor.deps]]
 use = "kalidyasin/yazi-flavors:tokyonight-moon"
 rev = "70fe6b4"

@@ -2,4 +2,5 @@
 prepend_keymap = [
   { on = "e", run = "shell 'code \"$@\"' --confirm", desc = "Edit with VSCode" },
   { on = [ "f", "c" ], run = "plugin clippy", desc = "Copy with Clippy" },
+  { on = [ "R", "b" ], run = "plugin recycle-bin", desc = "Ouvrir le menu de la corbeille" },
 ]
