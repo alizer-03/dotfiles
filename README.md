@@ -7,6 +7,7 @@ Configuration personnelle : Neovim, zsh, tmux, Ghostty, git, Starship, bat, gh, 
 - `nvim/` — configuration Neovim complète (LSP C/Python/Web, Git, snippets, thème)
 - `zsh/.zshrc` — configuration shell (alias, fonctions, plugins)
 - `tmux/` — configuration tmux (préfixe, plugins, popups, statusline) et scripts `tmux-sessionizer.sh`/`tmux-file-picker.sh` (navigation rapide via fzf)
+- `scripts/` — utilitaires shell généraux, sourcés/appelés depuis `zsh/.zshrc` : `fzf-git.sh` (recherche floue d'objets Git — branches, commits, stash... — directement dans le prompt, `Ctrl+G` puis une lettre) et `zoxide-open-nvim.sh` (trouve un fichier et l'ouvre dans Neovim sans `cd` préalable, alias `nzo`)
 - `ghostty/config` — configuration du terminal
 - `git/.gitconfig` — configuration git (alias, pager delta, etc.)
 - `git/.gitignore_global` — règles d'exclusion git globales (toutes machines)
@@ -14,9 +15,10 @@ Configuration personnelle : Neovim, zsh, tmux, Ghostty, git, Starship, bat, gh, 
 - `bat/config` — thème et pager pour `bat` (remplaçant de `cat`)
 - `gh/config.yml` — configuration du CLI GitHub (alias, préférences)
 - `lazygit/config.yml` — thème et pager pour l'interface Git en terminal
-- `yazi/` — configuration du gestionnaire de fichiers en terminal (thème, raccourcis, flavors)
+- `yazi/` — configuration du gestionnaire de fichiers en terminal (thème, raccourcis, flavors, plugins gérés par `ya pkg`)
 - `ripgrep/rgrc` — configuration de `rg` (smart-case)
 - `prettier/.prettierrc` — règles de formatage JS/CSS/HTML
+- `fastfetch/config.jsonc` — infos système (OS, CPU, mémoire...) affichées au tout premier terminal ouvert
 - `.editorconfig` — règles d'indentation partagées entre éditeurs (tabs pour C/Makefile)
 - `Brewfile` — liste des outils et applications installés via Homebrew
 
@@ -35,7 +37,7 @@ brew bundle install
 pipx install norminette
 pipx install c-formatter-42
 
-mkdir -p ~/.config/bat ~/.config/gh ~/.config/lazygit ~/.config/tmux ~/.config/ripgrep ~/Documents/Code
+mkdir -p ~/.config/bat ~/.config/gh ~/.config/lazygit ~/.config/tmux ~/.config/ripgrep ~/.config/fastfetch ~/Documents/Code
 
 ln -sf ~/dotfiles/nvim ~/.config/nvim
 ln -sf ~/dotfiles/zsh/.zshrc ~/.zshrc
@@ -50,6 +52,7 @@ ln -sf ~/dotfiles/lazygit/config.yml ~/.config/lazygit/config.yml
 ln -sf ~/dotfiles/yazi ~/.config/yazi
 ln -sf ~/dotfiles/ripgrep/rgrc ~/.config/ripgrep/rgrc
 ln -sf ~/dotfiles/prettier/.prettierrc ~/.prettierrc
+ln -sf ~/dotfiles/fastfetch/config.jsonc ~/.config/fastfetch/config.jsonc
 ln -sf ~/dotfiles/.editorconfig ~/Documents/Code/.editorconfig
 
 # 42-header.nvim : copie le modèle d'identité et renseigne-y ton login et ton
@@ -61,6 +64,11 @@ cp ~/dotfiles/nvim/lua/core/identity.lua.example ~/dotfiles/nvim/lua/core/identi
 mkdir -p ~/.config/bat/themes
 curl -o ~/.config/bat/themes/tokyonight_moon.tmTheme https://raw.githubusercontent.com/folke/tokyonight.nvim/main/extras/sublime/tokyonight_moon.tmTheme
 bat cache --build
+
+# yazi : restaure les plugins/flavors verrouillés dans yazi/package.toml
+# (clippy, glow, recycle-bin, le flavor tokyonight-moon) — sans cette étape,
+# yazi démarre sans eux même si les fichiers de config sont bien liés
+ya pkg install
 ```
 
 > Si `~/.config/nvim` (ou un autre fichier/dossier cible) existe déjà sur la machine, renomme-le ou supprime-le avant de créer le lien symbolique — sinon la commande `ln` échoue silencieusement.

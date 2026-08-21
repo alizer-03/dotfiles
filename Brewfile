@@ -11,6 +11,10 @@ brew "fd"
 brew "fzf"
 # GitHub command-line tool
 brew "gh"
+# Moniteur système interactif en ligne de commande
+brew "htop"
+# Analyseur statique pour C/C++, complémentaire à clang-tidy
+brew "cppcheck"
 # Distributed revision control system
 brew "git"
 # Syntax-highlighting pager for git and diff output
@@ -45,6 +49,10 @@ brew "tealdeer"
 brew "tmux"
 # Parser generator tool
 brew "tree-sitter-cli"
+# Requis par le plugin yazi recycle-bin (gestion de la corbeille)
+brew "trash-cli"
+# Affiche les infos système (OS, CPU, mémoire...) à la demande ou à l'ouverture du terminal
+brew "fastfetch"
 # Blazing fast terminal file manager written in Rust, based on async I/O
 brew "yazi"
 # Shell extension to navigate your filesystem faster
