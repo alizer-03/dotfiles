@@ -112,7 +112,13 @@ local function attach(bufnr)
 			schedule_highlight(bufnr)
 		end,
 	})
-	vim.api.nvim_create_autocmd("BufWipeout", {
+	-- BufDelete : cas normal de fermeture (":bdelete", et donc "<leader>bc"
+	-- / barbar.nvim, qui utilise vim-bbye en interne — un bdelete amélioré,
+	-- pas un wipeout). BufWipeout : cas d'un wipeout complet (":bwipeout",
+	-- ou à la fermeture de Neovim). Les deux sont gardés : un buffer peut
+	-- déclencher l'un puis l'autre selon le contexte, et le nettoyage est
+	-- sans risque à exécuter deux fois (rien à faire si déjà fait).
+	vim.api.nvim_create_autocmd({ "BufDelete", "BufWipeout" }, {
 		group = group,
 		buffer = bufnr,
 		callback = function()
