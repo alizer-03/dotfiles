@@ -32,7 +32,7 @@ if [[ "$selected" =~ ^\[TMUX\]\ (.+)$ ]]; then
   exit 0
 fi
 
-sess=$(basename "$selected")
+sess=$(basename "$selected" | tr '.:' '__')
 if [ -z "${TMUX:-}" ]; then
   tmux has-session -t "$sess" 2>/dev/null || tmux new-session -ds "$sess" -c "$selected"
   tmux attach -t "$sess"
