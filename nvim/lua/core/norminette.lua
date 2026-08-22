@@ -4,8 +4,11 @@ local M = {}
 -- confondre avec ceux de clangd (LSP) ni pouvoir les effacer par erreur
 local ns = vim.api.nvim_create_namespace("norminette")
 local enabled = true
-local timer
-local job
+-- Indexés par bufnr (pas des variables uniques) : sinon deux fichiers C/H
+-- sauvegardés rapprochés (ex. :wa) s'annulent l'un l'autre et seul le
+-- dernier obtient des diagnostics à jour.
+local timers = {}
+local jobs = {}
 
 -- Transforme la sortie texte de norminette en diagnostics Neovim.
 -- Format attendu par ligne : "Error: TYPE (line: N, col: N): message"
@@ -73,20 +76,27 @@ local function run(bufnr)
 	end
 	local name = vim.api.nvim_buf_get_name(bufnr)
 
-	-- si une exécution précédente est encore en cours, on l'annule : seul le
-	-- dernier état du fichier nous intéresse
-	if job then
+	-- si une exécution précédente est encore en cours pour CE buffer, on
+	-- l'annule : seul le dernier état du fichier nous intéresse
+	local existing = jobs[bufnr]
+	if existing then
 		pcall(function()
-			job:kill(9)
+			existing:kill(9)
 		end)
-		job = nil
+		jobs[bufnr] = nil
 	end
 
-	job = vim.system(
+	local this_job
+	this_job = vim.system(
 		{ "norminette", name },
 		{ text = true, timeout = 5000, env = { NO_COLOR = "1" } },
 		vim.schedule_wrap(function(res)
-			job = nil
+			-- ne nettoie que si ce job est toujours celui suivi pour ce
+			-- buffer (évite qu'un job déjà remplacé n'efface par erreur
+			-- l'entrée d'un job plus récent)
+			if jobs[bufnr] == this_job then
+				jobs[bufnr] = nil
+			end
 			if not vim.api.nvim_buf_is_valid(bufnr) then
 				return
 			end
@@ -94,6 +104,7 @@ local function run(bufnr)
 			vim.diagnostic.set(ns, bufnr, parse(out, bufnr))
 		end)
 	)
+	jobs[bufnr] = this_job
 end
 
 -- Relance run() sur tous les buffers chargés (utilisé par NorminetteToggle à
@@ -112,21 +123,22 @@ end
 -- sauvegardes en peu de temps) en une seule exécution, 400ms après la dernière.
 -- Évite de relancer norminette à chaque frappe/sauvegarde si elles s'enchaînent vite.
 local function schedule(bufnr)
-	if timer then
-		timer:stop()
+	local existing = timers[bufnr]
+	if existing then
+		existing:stop()
 		pcall(function()
-			timer:close()
+			existing:close()
 		end)
 	end
 	local t = vim.uv.new_timer()
-	timer = t
+	timers[bufnr] = t
 	t:start(400, 0, function()
 		t:stop()
 		pcall(function()
 			t:close()
 		end)
-		if timer == t then
-			timer = nil
+		if timers[bufnr] == t then
+			timers[bufnr] = nil
 		end
 		vim.schedule(function()
 			run(bufnr)
