@@ -18,8 +18,7 @@ Configuration personnelle : Neovim, zsh, tmux, Ghostty, git, Starship, bat, gh, 
 - `yazi/` — configuration du gestionnaire de fichiers en terminal (thème, raccourcis, flavors, plugins gérés par `ya pkg`)
 - `ripgrep/rgrc` — configuration de `rg` (smart-case)
 - `prettier/.prettierrc` — règles de formatage JS/CSS/HTML ; Prettier ne supporte aucune config globale par conception, ce fichier est donc pointé directement via `--config` dans `nvim/lua/plugins/init.lua` (bloc `conform.nvim`), pas par un lien symbolique
-- `fastfetch/config.jsonc` — infos système (OS, CPU, mémoire...) affichées au tout premier terminal ouvert
-- `.editorconfig` — règles d'indentation partagées entre éditeurs (tabs pour C/Makefile)
+- `.editorconfig` — règles d'indentation partagées entre éditeurs (tabs pour C/Makefile ; fin de ligne, newline finale et espaces en fin de ligne pour tout le reste, sauf Markdown)
 - `Brewfile` — liste des outils et applications installés via Homebrew
 
 ## Installation sur une nouvelle machine
@@ -41,7 +40,7 @@ brew trust --formula neilberkman/clippy/clippy
 pipx install norminette
 pipx install c-formatter-42
 
-mkdir -p ~/.config/bat ~/.config/gh ~/.config/lazygit ~/.config/tmux ~/.config/ripgrep ~/.config/fastfetch ~/Documents/Code
+mkdir -p ~/.config/bat ~/.config/gh ~/.config/lazygit ~/.config/tmux ~/.config/ripgrep ~/Documents/Code
 mkdir -p ~/.logs/nvim/backup ~/.logs/nvim/swap ~/.logs/nvim/undo
 
 ln -sf ~/dotfiles/nvim ~/.config/nvim
@@ -56,7 +55,6 @@ ln -sf ~/dotfiles/gh/config.yml ~/.config/gh/config.yml
 ln -sf ~/dotfiles/lazygit/config.yml ~/.config/lazygit/config.yml
 ln -sf ~/dotfiles/yazi ~/.config/yazi
 ln -sf ~/dotfiles/ripgrep/rgrc ~/.config/ripgrep/rgrc
-ln -sf ~/dotfiles/fastfetch/config.jsonc ~/.config/fastfetch/config.jsonc
 ln -sf ~/dotfiles/.editorconfig ~/Documents/Code/.editorconfig
 
 # 42-header.nvim : copie le modèle d'identité et renseigne-y ton login et ton
