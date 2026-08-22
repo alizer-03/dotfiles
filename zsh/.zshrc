@@ -7,8 +7,7 @@ setopt extended_glob          # active #, ~, ^ comme opérateurs de motif (ex. e
 setopt interactive_comments   # autorise les commentaires (#) en ligne de commande interactive
 stty stop undef                # désactive le gel du terminal sur Ctrl+S (flow control natif)
 # Historique — macOS en définit un minimal par défaut (/etc/zshrc) ; explicité
-# et élargi ici pour que le repo reste portable sur une machine neuve, et
-# pour profiter pleinement de Ctrl+K/Ctrl+J (recherche par préfixe) ci-dessous
+# et élargi ici pour que le repo reste portable sur une machine neuve
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=5000
 SAVEHIST=5000
@@ -42,17 +41,11 @@ export RIPGREP_CONFIG_PATH="$HOME/.config/ripgrep/rgrc"
 # Éditeur par défaut (outils CLI : git commit sans -m, crontab -e, etc.)
 export EDITOR='nvim'
 export VISUAL='nvim'
-# Historique — recherche par préfixe, complémentaire à Ctrl+R d'atuin (reste
-# sur la ligne en cours au lieu d'ouvrir un popup) : tape le début d'une
-# commande, Ctrl+K/Ctrl+J remonte/descend dans l'historique en filtrant dessus
-bindkey '^k' up-line-or-search
-bindkey '^j' down-line-or-search
 autoload -Uz edit-command-line   # édite la commande en cours dans $EDITOR avant exécution
 zle -N edit-command-line
 bindkey '^Xe' edit-command-line
 # Navigation
 cx() { cd "$1" && ll; }
-fcd() { cd "$(fd -t d | fzf)" && ll }
 f() { fd -t f | fzf | tr -d '\n' | pbcopy }   # copie le chemin choisi dans le presse-papiers
 mkcd() { mkdir -p "$1" && cd "$1"; }
 source ~/dotfiles/scripts/fzf-git.sh   # Ctrl+G puis f/b/t/h/s/r... : insère un objet Git (branche, commit, fichier...) choisi via fzf dans la ligne en cours
