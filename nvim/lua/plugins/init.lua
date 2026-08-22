@@ -800,8 +800,22 @@ return {
 			{ "<leader>u", "<cmd>UndotreeToggle<cr>", desc = "Arbre d'annulation" },
 		},
 	},
-    
-    -- Agrandit temporairement le split courant en plein écran (bascule),
+
+    -- Passage fluide Ctrl+h/j/k/l entre splits Neovim et panneaux tmux (voir
+	-- core/keymaps.lua pour les mappings, et tmux/tmux.conf pour le côté
+	-- tmux du même mécanisme). no_mappings = 1 : les mappings par défaut du
+	-- plugin feraient exactement la même chose que ceux déjà déclarés dans
+	-- core/keymaps.lua — les garder aussi ici créerait un doublon inutile,
+	-- et priverait which-key d'une description claire sur ces touches.
+	{
+		"christoomey/vim-tmux-navigator",
+		lazy = false, -- doit être prêt dès le départ, sinon les tout premiers Ctrl+hjkl échouent
+		init = function()
+			vim.g.tmux_navigator_no_mappings = 1
+		end,
+	},
+
+	-- Agrandit temporairement le split courant en plein écran (bascule),
 	-- puis restaure exactement la disposition d'origine des splits (pas
 	-- juste un partage à parts égales) — vérifié sur le code source du
 	-- plugin (utilise winrestcmd() pour capturer/restaurer la disposition

@@ -2,12 +2,15 @@
 -- redo, raccourci plus rapide que Ctrl+R
 vim.keymap.set("n", "U", "<C-r>", { desc = "Redo" })
 
--- Navigation entre splits Neovim (indépendant de la navigation entre
--- panneaux tmux, qui passe par le préfixe tmux, pas Ctrl)
-vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Split de gauche" })
-vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Split du dessous" })
-vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Split du dessus" })
-vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Split de droite" })
+-- Navigation entre splits Neovim ET panneaux tmux avec les mêmes touches
+-- (vim-tmux-navigator, dépendance déclarée dans plugins/init.lua) : passe au
+-- split voisin s'il y en a un, sinon délègue au panneau tmux correspondant
+-- (voir tmux/tmux.conf, côté tmux du même mécanisme) — un seul geste pour
+-- traverser toute la grille, qu'elle soit faite de splits ou de panneaux.
+vim.keymap.set("n", "<C-h>", "<cmd>TmuxNavigateLeft<cr>", { desc = "Split/panneau de gauche" })
+vim.keymap.set("n", "<C-j>", "<cmd>TmuxNavigateDown<cr>", { desc = "Split/panneau du dessous" })
+vim.keymap.set("n", "<C-k>", "<cmd>TmuxNavigateUp<cr>", { desc = "Split/panneau du dessus" })
+vim.keymap.set("n", "<C-l>", "<cmd>TmuxNavigateRight<cr>", { desc = "Split/panneau de droite" })
 
 -- Retire les raccourcis LSP natifs (Neovim 0.11+) qui font doublon exact
 -- avec Lspsaga ci-dessous (rename/code_action/references/outline) — un seul
