@@ -10,6 +10,10 @@ if [ -z "${1:-}" ]; then
 	roots=(".")
 else
 	mapfile -t roots < <(zoxide query -l)
+	if [ ${#roots[@]} -eq 0 ]; then
+		echo "zoxide n'a encore aucun dossier connu — utilise cd/z un peu avant de chercher partout." >&2
+		exit 1
+	fi
 fi
 
 file="$(fd --type f --hidden --exclude .git "${1:-}" "${roots[@]}" 2>/dev/null \
