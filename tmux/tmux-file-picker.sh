@@ -18,10 +18,15 @@ selected=$(
 
 [ -z "$selected" ] && exit 0
 
+output=""
 if $ai_mode; then
-  printf -v output "@%s " $(echo "$selected")
+  while IFS= read -r file; do
+    output+="@$file "
+  done <<< "$selected"
 else
-  output=$(printf "%q " $(echo "$selected"))
+  while IFS= read -r file; do
+    output+=$(printf '%q ' "$file")
+  done <<< "$selected"
 fi
 
 tmux send-keys -t "$pane_id" "$output"
