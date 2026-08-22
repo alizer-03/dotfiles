@@ -460,15 +460,11 @@ return {
 		end,
 	},
 
-	-- Saut rapide vers n'importe quel endroit visible à l'écran (labels sur les
-	-- correspondances), amélioration des motions f/F/t/T, et action à distance
-	-- (ex. "yr" + label = copier du texte sans déplacer le curseur jusque-là).
-	-- s/S ne sont volontairement pas déclarés ici (contrairement à l'exemple
-	-- par défaut du plugin) : les déclarer, même à `false`, crée un raccourci
-	-- "vide" qui bloque tout repli vers mini.surround/le S natif — ne pas les
-	-- déclarer du tout les laisse intacts. Le saut est donc sur <leader><leader>
-	-- à la place — r/R/Ctrl+S (ligne de commande) restent par défaut, vérifiés
-	-- sans conflit avec le reste.
+	-- Saut rapide vers tout endroit visible à l'écran, motions f/F/t/T
+	-- améliorées, et action à distance (ex. "yr" + label = copier sans
+	-- déplacer le curseur). s/S volontairement non déclarés : même à
+	-- `false`, ça crée un raccourci "vide" qui bloque le repli vers
+	-- mini.surround/le S natif — le saut reste donc sur <leader><leader>.
 	{
 		"folke/flash.nvim",
 		event = "VeryLazy",
@@ -481,14 +477,11 @@ return {
 		},
 	},
 
-	-- Barre d'onglets pour les buffers ouverts (onglets réordonnables,
-	-- redimensionnement automatique, icônes). Utilise mini.icons plutôt que
-	-- nvim-web-devicons pour les icônes : mini.icons peut se faire passer
-	-- pour nvim-web-devicons (méthode officielle du projet), ce qui évite
-	-- d'installer un deuxième fournisseur d'icônes redondant avec celui déjà
-	-- en place ci-dessus. Raccourcis volontairement réduits au strict
-	-- nécessaire (précédent/suivant/fermer) — le mode "saut par lettre" et le
-	-- tri par commande existent mais n'ont pas d'utilité prouvée pour l'instant.
+	-- Barre d'onglets pour les buffers ouverts. Utilise mini.icons plutôt
+	-- que nvim-web-devicons (mini.icons peut s'y faire passer pour lui,
+	-- méthode officielle) pour éviter un deuxième fournisseur d'icônes
+	-- redondant. Raccourcis réduits au strict nécessaire — pas d'utilité
+	-- prouvée pour le saut par lettre ou le tri par commande pour l'instant.
 	{
 		"romgrk/barbar.nvim",
 		event = "VeryLazy",
@@ -517,15 +510,10 @@ return {
 	},
 
 	-- Repositionne la ligne de commande (`:`, `/`, `?`) dans une fenêtre
-	-- flottante centrée plutôt qu'en bas de l'écran. Compatible nativement
-	-- avec blink.cmp pour la complétion en ligne de commande (déjà
-	-- configurée plus haut) — aucun réglage supplémentaire nécessaire pour
-	-- ça. Exige Neovim >= 0.12 et le système ui2 expérimental (activé plus
-	-- bas). Chargement OBLIGATOIREMENT immédiat (lazy = false, pas de lazy
-	-- loading sur un événement) : le plugin s'auto-initialise via
-	-- l'événement UIEnter lui-même, donc le charger plus tard (ex.
-	-- VeryLazy, qui survient après UIEnter) le fait rater cet événement et
-	-- le plugin ne s'active jamais.
+	-- flottante centrée. Compatible nativement avec blink.cmp, rien à
+	-- régler en plus. Requiert Neovim >= 0.12 (système ui2 activé plus bas).
+	-- lazy = false OBLIGATOIRE : le plugin s'initialise sur l'événement
+	-- UIEnter — chargé plus tard (VeryLazy) il le raterait et ne s'activerait jamais.
 	{
 		"rachartier/tiny-cmdline.nvim",
 		lazy = false,

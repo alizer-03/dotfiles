@@ -43,16 +43,12 @@ opt.splitbelow = true
 opt.scrolloff = 8
 opt.sidescrolloff = 8
 
--- Identité utilisée par le header généré automatiquement (voir 42-header.nvim
--- dans plugins/init.lua). Les vraies valeurs vivent dans core/identity.lua,
--- un fichier local non suivi par git (voir core/identity.lua.example pour le
--- modèle) — si ce fichier n'existe pas encore, on retombe sur des valeurs
--- vides plutôt que de faire planter Neovim.
---
--- Important : on assigne à vim.g.user / vim.g.mail (sans "42") — ce sont les
--- noms exacts que 42-header.nvim lit en priorité maximale, avant même les
--- variables d'environnement système (qui sinon écraseraient silencieusement
--- notre configuration avec le nom de session macOS).
+-- Identité pour le header généré automatiquement (42-header.nvim). Valeurs
+-- réelles dans core/identity.lua (gitignored, voir core/identity.lua.example)
+-- — vides si absent plutôt que de planter Neovim. Assignées à vim.g.user/mail
+-- (sans "42") : ce sont les noms exacts lus en priorité par 42-header.nvim,
+-- avant les variables d'environnement système qui sinon écraseraient
+-- silencieusement la config avec le nom de session macOS.
 local ok, identity = pcall(require, "core.identity")
 g.user = ok and identity.user42 or ""
 g.mail = ok and identity.mail42 or ""

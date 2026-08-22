@@ -1,12 +1,8 @@
--- Snippets pour LuaSnip, adaptés aux conventions de code de la piscine 42
--- (école 42) : recours systématique à des tabulations, prototypes de fonction
--- avec le type de retour et le nom séparés par une tabulation, etc.
+-- Snippets LuaSnip pour les conventions 42 : tabulations systématiques,
+-- prototypes avec type de retour et nom séparés par une tabulation, etc.
 -- Chargé automatiquement depuis lua/plugins/init.lua.
---
--- Note : le "\t" entre guillemets, plus bas, représente une vraie tabulation
--- (pas des espaces) — nécessaire à la fois pour la norme de style C visée
--- ici et pour les lignes de recette d'un Makefile, qui exigent des
--- tabulations pour être valides.
+-- Note : les "\t" entre guillemets plus bas sont de vraies tabulations,
+-- requises à la fois par la norme C visée et par les recettes Makefile.
 
 local ls = require("luasnip")
 local s = ls.snippet
