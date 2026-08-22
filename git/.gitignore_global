@@ -21,5 +21,8 @@ venv/
 *.dSYM/
 compile_commands.json
 
+# Node / JavaScript
+node_modules/
+
 # VSCode
 .vscode/
