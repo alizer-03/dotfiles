@@ -1,8 +1,11 @@
+# Improved shell history for zsh, bash, fish and nushell
 brew "atuin"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
 # Bash scripts that integrate bat with various command-line tools
 brew "bat-extras"
+# Analyseur statique pour C/C++, complémentaire à clang-tidy
+brew "cppcheck"
 # Modern, maintained replacement for ls
 brew "eza"
 # Simple, fast and user-friendly alternative to find
@@ -11,30 +14,26 @@ brew "fd"
 brew "fzf"
 # GitHub command-line tool
 brew "gh"
-# Moniteur système interactif en ligne de commande
-brew "htop"
-# Analyseur statique pour C/C++, complémentaire à clang-tidy
-brew "cppcheck"
 # Distributed revision control system
 brew "git"
 # Syntax-highlighting pager for git and diff output
 brew "git-delta"
+# Moniteur système interactif en ligne de commande
+brew "htop"
 # Simple terminal UI for git commands
 brew "lazygit"
 # Deep clean and optimize your Mac
 brew "mole"
 # Copy real files to the macOS clipboard from the terminal
 brew "neilberkman/clippy/clippy"
-# Incremental parsing library
-brew "tree-sitter"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
 # Open-source, cross-platform JavaScript runtime environment
 brew "node"
-# Interpreted, interactive, object-oriented programming language
-brew "python@3.14"
 # Execute binaries from Python packages in isolated environments
 brew "pipx"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.14"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
 # Static analysis tool for shell scripts
@@ -45,12 +44,12 @@ brew "starship"
 brew "tealdeer"
 # Terminal multiplexer
 brew "tmux"
-# Parser generator tool
-brew "tree-sitter-cli"
 # Requis par le plugin yazi recycle-bin (gestion de la corbeille)
 brew "trash-cli"
-# Affiche les infos système (OS, CPU, mémoire...) à la demande ou à l'ouverture du terminal
-brew "fastfetch"
+# Incremental parsing library
+brew "tree-sitter"
+# Parser generator tool
+brew "tree-sitter-cli"
 # Blazing fast terminal file manager written in Rust, based on async I/O
 brew "yazi"
 # Shell extension to navigate your filesystem faster
@@ -69,6 +68,7 @@ cask "brave-browser"
 cask "claude"
 # Voice and text chat software
 cask "discord"
+# JetBrains Mono patched with icons (Nerd Font) — terminal, starship, mini.icons
 cask "font-jetbrains-mono-nerd-font"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
