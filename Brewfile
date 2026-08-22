@@ -19,8 +19,6 @@ brew "cppcheck"
 brew "git"
 # Syntax-highlighting pager for git and diff output
 brew "git-delta"
-# Render markdown on the CLI
-brew "glow"
 # Simple terminal UI for git commands
 brew "lazygit"
 # Deep clean and optimize your Mac
@@ -71,7 +69,6 @@ cask "brave-browser"
 cask "claude"
 # Voice and text chat software
 cask "discord"
-cask "font-hack-nerd-font"
 cask "font-jetbrains-mono-nerd-font"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
@@ -92,6 +89,7 @@ vscode "adpyke.codesnap"
 vscode "anthropic.claude-code"
 vscode "MwaleJonathan.tokyonight-vscode"
 vscode "dbaeumer.vscode-eslint"
+vscode "dokca.42-ft-count-line"
 vscode "editorconfig.editorconfig"
 vscode "esbenp.prettier-vscode"
 vscode "formulahendry.auto-rename-tag"
@@ -111,4 +109,3 @@ vscode "pkief.material-product-icons"
 vscode "qwtel.sqlite-viewer"
 vscode "tomoki1207.pdf"
 vscode "usernamehw.errorlens"
-npm "eslint"
