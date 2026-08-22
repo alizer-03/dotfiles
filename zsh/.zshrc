@@ -30,9 +30,9 @@ eval "$(starship init zsh)"
 eval "$(zoxide init zsh --cmd cd)"           # remplace directement `cd` (pas une commande séparée `z`)
 source <(fzf --zsh)                          # Alt+C / Ctrl+T (fzf)
 eval "$(atuin init zsh --disable-up-arrow)"  # Ctrl+R : repris par atuin (fzf le définit avant, volontairement écrasé)
-export FZF_DEFAULT_COMMAND='fd --type f --exclude .git'
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_ALT_C_COMMAND='fd --type d --exclude .git'
+export FZF_ALT_C_COMMAND='fd --type d --hidden --exclude .git'
 export FZF_DEFAULT_OPTS=" \
 --color=bg+:#2f334d,bg:#222436,spinner:#ffc777,hl:#ff966c \
 --color=fg:#c8d3f5,header:#4fd6be,info:#0db9d7,pointer:#c099ff \
@@ -50,7 +50,6 @@ f() { fd -t f | fzf | tr -d '\n' | pbcopy }   # copie le chemin choisi dans le p
 mkcd() { mkdir -p "$1" && cd "$1"; }
 source ~/dotfiles/scripts/fzf-git.sh   # Ctrl+G puis f/b/t/h/s/r... : insère un objet Git (branche, commit, fichier...) choisi via fzf dans la ligne en cours
 alias nzo="~/dotfiles/scripts/zoxide-open-nvim.sh"   # trouve un fichier (dossier courant, ou motif dans tes dossiers zoxide) et l'ouvre direct dans nvim
-[ -z "$TMUX" ] && fastfetch   # affiche les infos système seulement au tout premier terminal ouvert, pas à chaque nouveau panneau/fenêtre tmux ($TMUX déjà défini dans ce cas)
 # Aliases — fichiers
 alias ls='eza --git --group-directories-first --icons=auto'
 alias ll='eza -la --git --group-directories-first --icons=auto'
