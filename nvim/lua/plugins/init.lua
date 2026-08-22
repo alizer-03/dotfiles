@@ -72,7 +72,12 @@ return {
 		},
 	},
 
-	-- Pont générique entre Neovim et les serveurs LSP (utilisé par clangd)
+	-- Fournit les réglages par défaut (filetypes, cmd, racine de projet) de
+	-- tous les serveurs LSP déclarés dans lsp/servers.lua, pas seulement
+	-- clangd : pyright/html/cssls/ts_ls/eslint/lua_ls sont tous passés avec
+	-- {} vide et ne fonctionnent que grâce à ces défauts intégrés, découverts
+	-- automatiquement par vim.lsp.config/vim.lsp.enable une fois ce plugin
+	-- chargé (voir :h lsp-config).
 	{
 		"neovim/nvim-lspconfig",
 		event = { "BufReadPre", "BufNewFile" },
@@ -801,7 +806,7 @@ return {
 		},
 	},
 
-    -- Passage fluide Ctrl+h/j/k/l entre splits Neovim et panneaux tmux (voir
+	-- Passage fluide Ctrl+h/j/k/l entre splits Neovim et panneaux tmux (voir
 	-- core/keymaps.lua pour les mappings, et tmux/tmux.conf pour le côté
 	-- tmux du même mécanisme). no_mappings = 1 : les mappings par défaut du
 	-- plugin feraient exactement la même chose que ceux déjà déclarés dans
