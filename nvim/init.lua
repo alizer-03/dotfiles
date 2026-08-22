@@ -2,7 +2,7 @@
 -- déjà présent, puis l'ajoute au runtimepath de Neovim pour pouvoir l'utiliser
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.uv.fs_stat(lazypath) then
-	vim.fn.system({
+	local out = vim.fn.system({
 		"git",
 		"clone",
 		"--filter=blob:none", -- clone partiel : plus rapide, sans l'historique complet
@@ -10,6 +10,15 @@ if not vim.uv.fs_stat(lazypath) then
 		"--branch=stable",
 		lazypath,
 	})
+	if vim.v.shell_error ~= 0 then
+		vim.api.nvim_echo({
+			{ "Échec du clone de lazy.nvim :\n", "ErrorMsg" },
+			{ out, "WarningMsg" },
+			{ "\nAppuie sur une touche pour quitter..." },
+		}, true, {})
+		vim.fn.getchar()
+		os.exit(1)
+	end
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -36,7 +45,7 @@ require("lazy").setup("plugins", {
 		rtp = {
 			-- plugins intégrés à Neovim qu'on n'utilise pas, désactivés pour un
 			-- démarrage légèrement plus rapide
-			disabled_plugins = { "gzip", "tarPlugin", "tohtml", "tutor", "zipPlugin" },
+			disabled_plugins = { "gzip", "netrwPlugin", "tarPlugin", "tohtml", "tutor", "zipPlugin" },
 		},
 	},
 })
