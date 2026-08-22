@@ -676,6 +676,14 @@ return {
 		},
 		opts = {
 			formatters = {
+				prettier = {
+					-- pointe directement vers le fichier de règles du repo, car
+					-- Prettier ne supporte aucune config globale par conception
+					-- (confirmé via sa doc officielle) : sans ce --config explicite,
+					-- il retombe silencieusement sur ses réglages par défaut dans
+					-- tout projet qui n'a pas son propre .prettierrc local
+					prepend_args = { "--config", vim.fn.expand("~/dotfiles/prettier/.prettierrc") },
+				},
 				clang_format = {
 					-- ne s'applique jamais dans un dossier "42" : la norme de ce
 					-- cursus a son propre formateur dédié (voir c_formatter_42 ci-dessous)
