@@ -18,4 +18,6 @@ cursor-style-blink = true
 confirm-close-surface = true
 copy-on-select = true
 shell-integration = detect
+# Laisse Ctrl+T atteindre le shell (widget fzf : insère un fichier choisi
+# dans la ligne de commande) plutôt que d'être intercepté par Ghostty
 keybind = ctrl+t=unbind
